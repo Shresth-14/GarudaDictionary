@@ -5,9 +5,10 @@
 | Tool | Used for |
 |---|---|
 | Claude Code (Claude Opus 5.5) | Researching Garuda Prakashan and Indic search techniques, planning the architecture, writing the search and setup code, and drafting dictionary entries. I reviewed and tested all of it. |
+| Claude Code (same workflow, later session work) | The second phase: editorial redesign (colour tokens, type scale, layouts), the Browse / Saved / Recent views, the word detail layout, and publishing the dataset as JSON for other apps and AI tools. |
 | Node test runner, Vite build, browser | Checking the AI's output |
 
-**Chat:** one Claude Code session.
+**Chat:** Claude Code sessions. The first built the search, data and setup; later ones did the redesign, extra views and JSON API.
 
 ## Key decisions: what AI proposed, and what I kept, changed or rejected
 
