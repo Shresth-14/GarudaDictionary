@@ -1,9 +1,12 @@
-// ponytail: two views (results list, entry detail) switched by the URL hash; no router library.
+// ponytail: two views (home/results, entry detail) switched by the URL hash; no router library.
 import words from "../data/words.json";
 import { buildIndex, search, findEntry, slug } from "./search.js";
+import { recent, addRecent, saved, isSaved, toggleSaved } from "./store.js";
 import "./style.css";
 
 const idx = buildIndex(words);
+const byId = new Map(words.map((w) => [w.id, w]));
+const entries = (ids) => ids.map((id) => byId.get(id)).filter(Boolean); // ignores ids from older datasets
 const q = document.getElementById("q");
 const out = document.getElementById("results");
 const TITLE = document.title;
@@ -18,11 +21,25 @@ function el(tag, attrs = {}, ...children) {
 
 const wordHref = (w) => `#/word/${encodeURIComponent(slug(w))}`;
 
-function card(w) {
-  return el("a", { class: "card", href: wordHref(w) },
+function card(w, extraClass = "") {
+  return el("a", { class: `card ${extraClass}`.trim(), href: wordHref(w) },
     el("h2", { lang: "hi" }, w.headword),
-    el("p", { lang: "sa-Latn", class: "iast" }, w.transliteration),
+    el("p", { class: "iast" }, el("span", { lang: "sa-Latn" }, w.transliteration), el("span", { class: "pos" }, ` · ${w.pos}`)),
     el("p", {}, w.meanings.join("; ")));
+}
+
+// same word for everyone on a given day, cycling through the dataset
+const wordOfTheDay = () => words[Math.floor(Date.now() / 864e5) % words.length];
+
+function home() {
+  const nodes = [el("p", { class: "label" }, "Word of the day"), card(wordOfTheDay(), "featured")];
+  const r = entries(recent());
+  if (r.length) nodes.push(el("p", { class: "label" }, "Recently viewed"),
+    el("ul", { class: "chips links" }, ...r.map((w) => el("li", {}, el("a", { href: wordHref(w), lang: "hi" }, w.headword)))));
+  const s = entries(saved());
+  if (s.length) nodes.push(el("p", { class: "label" }, "Saved"), ...s.map((w) => card(w)));
+  nodes.push(hint("Search the dictionary"));
+  return nodes;
 }
 
 const EXAMPLES = ["dharm", "धर्म", "shaanthi", "gyan", "vruksha"];
@@ -45,7 +62,7 @@ function renderList() {
   document.title = TITLE;
   const query = q.value.trim();
   const { results, suggestions } = search(idx, query);
-  if (!query) return out.replaceChildren(hint("Search the dictionary"));
+  if (!query) return out.replaceChildren(...home());
   if (!results.length && !suggestions.length) return out.replaceChildren(hint(`No match for “${query}”`));
   const nodes = results.map(card);
   if (suggestions.length) nodes.push(el("h3", {}, results.length ? "Similar words" : "Did you mean…"), ...suggestions.map(card));
@@ -65,7 +82,12 @@ function renderDetail(key) {
     return;
   }
   document.title = `${w.headword} (${w.transliteration}) · ${TITLE}`;
+  addRecent(w.id);
   const heading = el("h2", { lang: "hi", tabindex: "-1" }, w.headword);
+  const save = el("button", { type: "button", class: "save" });
+  const paint = (on) => { save.textContent = on ? "★ Saved" : "☆ Save"; save.setAttribute("aria-pressed", on); };
+  paint(isSaved(w.id));
+  save.addEventListener("click", () => paint(toggleSaved(w.id)));
   const share = el("button", { type: "button" }, "Share link");
   share.addEventListener("click", async () => {
     const url = location.href;
@@ -82,7 +104,7 @@ function renderDetail(key) {
     section("Meanings", el("ol", {}, ...w.meanings.map((m) => el("li", {}, m)))),
     section("Example", el("blockquote", { lang: "hi" }, w.example)),
     section("Also spelled", el("ul", { class: "chips", lang: "hi-Latn" }, ...w.romanised.map((r) => el("li", {}, r)))),
-    share));
+    el("div", { class: "actions" }, save, share)));
   scrollTo(0, 0);
   heading.focus();
 }
