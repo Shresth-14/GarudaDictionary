@@ -9,6 +9,7 @@ import { renderHome } from "./views/home.js";
 import { renderWord } from "./views/word.js";
 import { renderBrowse } from "./views/browse.js";
 import { renderSaved, renderRecent, renderAbout } from "./views/lists.js";
+import { stopSpeaking } from "./ui/speak.js";
 
 const app = document.getElementById("app");
 const menuBtn = document.querySelector(".menu-btn");
@@ -34,6 +35,7 @@ let cleanup = null;
 function route(first = false) {
   // clearing the search on a word page lands on home: keep the cursor in the search box
   const searching = document.activeElement?.classList.contains("search-input");
+  stopSpeaking(); // never keep talking after the page changes
   cleanup?.abort();
   cleanup = new AbortController();
   const hit = ROUTES.map(([re, section, view]) => [location.hash.match(re), section, view]).find(([m]) => m);

@@ -4,6 +4,7 @@ import { addRecent, isSaved, toggleSaved } from "../store.js";
 import { el, icon, splitPos } from "../ui/dom.js";
 import { resultOption, wordHref } from "../ui/rows.js";
 import { searchBox, getQuery, noResults } from "../ui/searchbox.js";
+import { listenButton } from "../ui/speak.js";
 
 function entry(w) {
   const { pos, gender } = splitPos(w.pos);
@@ -26,16 +27,27 @@ function entry(w) {
     } catch { /* share sheet cancelled */ }
   });
 
+  const hint = el("p", { class: "listen-hint", role: "status", hidden: true },
+    "This device has no Hindi voice, so the pronunciation may sound off. Add one in your phone's text-to-speech settings.");
+  const showHint = () => { hint.hidden = false; };
+  const listenWord = listenButton({ text: w.headword, label: `Listen to ${w.transliteration}`, onNoVoice: showHint });
+  const listenExample = w.example && listenButton({ text: w.example, label: "Listen to the example sentence", rate: 0.8, labelled: true, onNoVoice: showHint });
+
   const section = (title, ...body) => el("section", { class: "entry-section" }, el("h2", {}, title), ...body);
   return el("article", { class: "entry" },
       el("header", { class: "entry-head" },
-        el("div", { class: "entry-title" }, heading, el("p", { class: "entry-iast", lang: "sa-Latn" }, w.transliteration)),
+        el("div", { class: "entry-title" },
+          el("div", { class: "entry-word-row" }, heading, listenWord),
+          el("p", { class: "entry-iast", lang: "sa-Latn" }, w.transliteration)),
         el("div", { class: "entry-gram" },
           el("p", { class: "eyebrow" }, pos),
           gender && el("p", { class: "entry-gender" }, gender)),
         el("div", { class: "entry-actions" }, save, share)),
+      hint,
       section("Meaning", el("ol", { class: "meanings" }, ...w.meanings.map((m) => el("li", {}, m)))),
-      w.example && section("Example", el("blockquote", { class: "example", lang: "hi" }, w.example)),
+      w.example && el("section", { class: "entry-section" },
+        el("div", { class: "section-head" }, el("h2", {}, "Example"), listenExample),
+        el("blockquote", { class: "example", lang: "hi" }, w.example)),
       section("Also spelled", el("ul", { class: "pills", lang: "hi-Latn" }, ...w.romanised.map((r) => el("li", {}, r)))));
 }
 
