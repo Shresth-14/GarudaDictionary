@@ -6,7 +6,8 @@ import { buildIndex, search } from "../src/search.js";
 
 const words = JSON.parse(readFileSync(new URL("../data/words.json", import.meta.url), "utf8"));
 const idx = buildIndex(words);
-const top = (q) => search(idx, q)[0]?.headword;
+const top = (q) => search(idx, q).results[0]?.headword;
+const guess = (q) => search(idx, q).suggestions[0]?.headword;
 
 test("Devanagari and every stored romanised spelling reach the same entry", () => {
   for (const w of words) {
@@ -26,9 +27,38 @@ test("spellings not in the romanised list", () => {
   for (const [q, want] of Object.entries(cases)) assert.equal(top(q), want, q);
 });
 
-test("typos within the length-based edit limit", () => {
-  assert.equal(top("shikhsa"), "शिक्षा");
-  assert.equal(top("prakesh"), "प्रकाश");
+test("typos and Sanskrit -am endings are offered as suggestions, not results", () => {
+  assert.equal(top("shikhsa"), "शिक्षा"); // folds to the same key, so a confident match
+  assert.equal(top("prakesh"), undefined);
+  assert.equal(guess("prakesh"), "प्रकाश");
+  assert.equal(guess("satyam"), "सत्य");
+  assert.equal(guess("vriksham"), "वृक्ष");
+});
+
+test("a word not in the data is never shown as a confident match", () => {
+  // ज्ञानी (gyani) and योगी (yogi) are absent; their nearest entries may only be suggestions
+  assert.equal(top("gyani"), undefined);
+  assert.equal(guess("gyani"), "ज्ञान");
+  assert.equal(top("yogi"), undefined);
+  assert.equal(guess("yogi"), "योग");
+  assert.equal(top("shakti"), "शक्ति"); // and once a word is added, it wins outright
+});
+
+test("curated dataset: 60+ entries and no two headwords share a search key", () => {
+  assert.ok(words.length >= 60, `only ${words.length} entries`);
+  const seen = new Map();
+  for (const w of words) {
+    const k = skeleton(w.headword);
+    assert.ok(!seen.has(k), `${w.headword} and ${seen.get(k)} share the key "${k}"`);
+    seen.set(k, w.headword);
+  }
+});
+
+test("near pairs stay apart", () => {
+  const pairs = { sukh: "सुख", dukh: "दुःख", ped: "पेड़", ved: "वेद", gun: "गुण", guru: "गुरु",
+    pita: "पिता", mata: "माता", rat: "रात", fool: "फूल", larki: "लड़की", zameen: "ज़मीन", gyan: "ज्ञान" };
+  for (const [q, want] of Object.entries(pairs)) assert.equal(top(q), want, q);
+  assert.deepEqual(search(idx, "tree").results.map((w) => w.headword).sort(), ["पेड़", "वृक्ष"].sort());
 });
 
 test("English meaning is a fallback", () => {
@@ -37,9 +67,10 @@ test("English meaning is a fallback", () => {
 });
 
 test("no results", () => {
-  assert.deepEqual(search(idx, "xyzq"), []);
-  assert.deepEqual(search(idx, ""), []);
-  assert.deepEqual(search(idx, "   "), []);
+  const none = { results: [], suggestions: [] };
+  assert.deepEqual(search(idx, "xyzq"), none);
+  assert.deepEqual(search(idx, ""), none);
+  assert.deepEqual(search(idx, "   "), none);
 });
 
 test("skeleton regression guards (over-eager rules broke these)", () => {

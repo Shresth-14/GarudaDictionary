@@ -7,19 +7,25 @@ const idx = buildIndex(words);
 const q = document.getElementById("q");
 const out = document.getElementById("results");
 
+function card(w) {
+  const li = document.createElement("article");
+  li.innerHTML = `<h2 lang="hi"></h2><p lang="sa-Latn"></p><p></p>`;
+  const [h, t, m] = li.children;
+  h.textContent = w.headword;
+  t.textContent = w.transliteration;
+  m.textContent = w.meanings.join("; ");
+  return li;
+}
+
 function render() {
-  const hits = search(idx, q.value);
-  out.replaceChildren(
-    ...hits.map((w) => {
-      const li = document.createElement("article");
-      li.innerHTML = `<h2 lang="hi"></h2><p lang="sa-Latn"></p><p></p>`;
-      const [h, t, m] = li.children;
-      h.textContent = w.headword;
-      t.textContent = w.transliteration;
-      m.textContent = w.meanings.join("; ");
-      return li;
-    }),
-  );
+  const { results, suggestions } = search(idx, q.value);
+  const nodes = results.map(card);
+  if (suggestions.length) {
+    const h = document.createElement("h3");
+    h.textContent = results.length ? "Similar words" : "Did you mean…";
+    nodes.push(h, ...suggestions.map(card));
+  }
+  out.replaceChildren(...nodes);
 }
 
 q.addEventListener("input", render);
