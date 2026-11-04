@@ -108,18 +108,39 @@ Entries were drafted with AI and reviewed by hand. Genders were cross-checked ag
 
 ## Using the dictionary in other apps and AI tools
 
-The brief asks how the dictionary can plug into other apps, AI tools and platforms. Every build publishes the dataset as plain JSON files alongside the app:
+The brief asks how the dictionary can plug into other apps, AI tools and platforms. Everything below is static: it is generated at build time, needs no server, and the JSON files are served with `Access-Control-Allow-Origin: *`, so any website's JavaScript can fetch them.
 
-| URL | Returns |
-|---|---|
-| [`/api/words.json`](https://shresth-14.github.io/GarudaDictionary/api/words.json) | All entries, as a JSON array in the brief's format |
-| [`/api/words/dharma.json`](https://shresth-14.github.io/GarudaDictionary/api/words/dharma.json) | One entry. The slug is its first romanised spelling (`shiksha`, `gyan`, `vriksh`…) |
-| [`/#/word/dharm`](https://shresth-14.github.io/GarudaDictionary/#/word/dharm) | Opens a word in the app. Any spelling or Devanagari works, so other sites can link straight to an entry |
-| [`/llms.txt`](https://shresth-14.github.io/GarudaDictionary/llms.txt) | A short plain-text guide to the above, for AI assistants and crawlers |
+| What | URL or how | Use it for |
+|---|---|---|
+| **All entries** | [`/api/words.json`](https://shresth-14.github.io/GarudaDictionary/api/words.json) | A full copy, in the brief's format |
+| **One entry** | [`/api/words/dharma.json`](https://shresth-14.github.io/GarudaDictionary/api/words/dharma.json) | A single lookup. The slug is the first romanised spelling (`shiksha`, `gyan`, `vriksh`…) |
+| **Index** | [`/api/index.json`](https://shresth-14.github.io/GarudaDictionary/api/index.json) | Every slug with its `api`, `page` and `embed` links, so an app can sync without guessing names |
+| **Dataset info** | [`/api/meta.json`](https://shresth-14.github.io/GarudaDictionary/api/meta.json) | Version, build time, entry count, field names and licence status, so an app can tell when the data changed |
+| **Link to a word** | [`/#/word/dharm`](https://shresth-14.github.io/GarudaDictionary/#/word/dharm) | Any spelling or Devanagari opens the same entry |
+| **Embed a word** | `<iframe src=".../#/word/dharma?embed=1">` | A clean entry card (no menu or footer) for blogs, Notion, course pages |
+| **Browser search bar** | [`/opensearch.xml`](https://shresth-14.github.io/GarudaDictionary/opensearch.xml) | Add "Garuda Dictionary" as a search engine, then type `dharm` in the address bar |
+| **AI assistants** | [`/llms.txt`](https://shresth-14.github.io/GarudaDictionary/llms.txt) | A plain-text guide to all of the above |
 
 ```bash
+# one entry
 curl -s https://shresth-14.github.io/GarudaDictionary/api/words/dharma.json
 ```
+
+```js
+// from any web page: look a word up
+const w = await fetch("https://shresth-14.github.io/GarudaDictionary/api/words/dharma.json").then((r) => r.json());
+console.log(w.headword, w.meanings); // धर्म ["righteous duty", ...]
+```
+
+```html
+<!-- an entry card on any page -->
+<iframe src="https://shresth-14.github.io/GarudaDictionary/#/word/dharma?embed=1"
+        width="100%" height="560" style="border:0" title="धर्म, Garuda Dictionary"></iframe>
+```
+
+**Browser search bar.** The site advertises `opensearch.xml`, so Firefox offers to add it. In Chrome, add it by hand: Settings → Search engine → Manage search engines and site search → Add, with the URL `https://shresth-14.github.io/GarudaDictionary/#/word/%s`. A word the dictionary doesn't have shows the nearest suggestions.
+
+**Limits, stated plainly.** These are read-only static files, so there is no `?q=dharm` search endpoint yet; to search with typo tolerance from another app, fetch `words.json` and match locally. `meta.json` says the data has no reuse licence yet, because that is Garuda Prakashan's decision, not the prototype's.
 
 The files are generated from `data/words.json` at build time (`vite.config.js`), so they can't drift from the app.
 
@@ -143,7 +164,7 @@ Swiss grid and editorial type on an ivory canvas: deep maroon (#682B38) for inte
 - A larger, editor-reviewed dataset, with Garuda's editors checking every entry.
 - Short notes on words that lose meaning in translation (dharma ≠ "religion"), reviewed by Garuda's editors.
 - Pronunciation recorded by native speakers. The current speaker button uses the phone's built-in voice, whose quality varies by device.
-- A search API (`?q=dharm`) and an embeddable widget, so other sites, apps and AI assistants can look up any spelling, not just exact slugs. This needs a small server or edge function, because the current files are static.
+- A search API (`?q=dharm`) on an edge function, an MCP server and OpenAPI spec for AI assistants, a script-tag widget, and a static page per word with schema.org markup so search engines and AI tools can cite entries. The search API needs a small server, because the current files are static.
 - Learning new spelling variants from what users actually search for.
 
 ## AI use
