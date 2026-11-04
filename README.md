@@ -13,14 +13,14 @@ A phone-first, offline-capable prototype front-end for Garuda Prakashan's dictio
 | Brief | What the app does |
 |---|---|
 | **Must:** Devanagari and Roman search return the same entry | धर्म, dharma, dharm, dharam and DHARMA all open धर्म, including spellings that aren't stored (shaanthi, vruksha, zameen) |
-| **Must:** entry detail screen with all fields | Headword, IAST, part of speech, numbered meanings, example sentence and every romanised spelling. Each word has its own link (`#/word/dharma`), and any spelling works in the link (`#/word/dharm`, `#/word/धर्म`) |
-| **Must:** works well on a phone | Phone-first layout with a sticky search bar, 44px+ tap targets, large Devanagari type, and light and dark themes. Installable to the home screen |
+| **Must:** entry detail screen with all fields | Headword, IAST, part of speech and gender, numbered meanings, example sentence and every romanised spelling. After a search, results sit in a column beside the entry. Each word has its own link (`#/word/dharma`), and any spelling works in the link (`#/word/dharm`, `#/word/धर्म`) |
+| **Must:** works well on a phone | A deliberate single-column phone layout: compact masthead with a menu, results as a scrolling strip of pills, 44px+ tap targets and large Devanagari type. Checked for overflow at 320, 375, 768 and 1440px. Installable to the home screen |
 | **Must:** clear no-results state | Shows the query, explains what to type, and offers example searches to tap |
-| **Bonus:** typo-tolerant search | Typos are offered under "Did you mean…", never shown as if they were the answer |
-| **Bonus:** works offline | A service worker caches the app and dataset after the first visit |
-| **Bonus:** recent searches or bookmarks | The last 8 words viewed, plus saved words (☆ Save), both on the home screen |
+| **Bonus:** typo-tolerant search | Typos are offered under "Did you mean…", never shown as if they were the answer. The search dropdown works with ArrowUp/ArrowDown, Enter and Escape |
+| **Bonus:** works offline | A service worker caches the app, dataset and fonts after the first visit |
+| **Bonus:** recent searches or bookmarks | The last 8 words viewed, plus saved words (Save on any entry, Remove on the Saved page) |
 
-The home screen also shows a **word of the day**.
+Also: a **word of the day** on the home page, and a **Browse** view with an A–Z index, a Devanagari (अ–ह) index and part-of-speech filters.
 
 ## How to run
 
@@ -41,9 +41,13 @@ Every push to `main` runs the tests, builds and deploys to GitHub Pages (`.githu
 | `src/normalise.js` | Turns any input (Devanagari, IAST or loose Roman) into one ASCII "skeleton" key |
 | `src/search.js` | Finds and ranks matches; returns confident **results** and **"Did you mean…"** suggestions separately; resolves word links |
 | `src/store.js` | Recently viewed and saved words, stored as entry ids in the browser's `localStorage` |
-| `src/main.js`, `src/style.css` | The UI: home, results and detail views, switched by the URL hash with no router library |
+| `src/browse.js` | Letter indexes and filters for Browse (no DOM, unit-tested) |
+| `src/main.js` | Routes the URL hash to a view, with no router library |
+| `src/views/` | Home, word (results + entry), browse, and saved / recent / about |
+| `src/ui/` | Shared search box (ARIA combobox), result rows, icons and the `el()` helper |
+| `src/style.css` | Design tokens (ivory, maroon, gold), type scale and layouts |
 | `scripts/validate.mjs` | Dataset checks, run before every test and build |
-| `test/` | Search tests on the real dataset, including Indic edge cases; storage tests |
+| `test/` | Search tests on the real dataset, including Indic edge cases; storage and browse tests |
 
 The app is fully static: no backend, no database. The dataset is bundled with the app and cached by a service worker, so search works offline after the first visit.
 
@@ -112,6 +116,10 @@ curl -s https://shresth-14.github.io/GarudaDictionary/api/words/dharma.json
 
 The files are generated from `data/words.json` at build time (`vite.config.js`), so they can't drift from the app.
 
+## Design
+
+Swiss grid and editorial type on an ivory canvas: deep maroon (#682B38) for interaction, antique gold for rules and metadata, thin dividers instead of cards. Inter for the interface and Noto Serif Devanagari for Hindi and Sanskrit words. Both are self-hosted, so they work offline. Only the Latin and Devanagari subsets are cached. Gold text uses a darker shade (#8A6D3B) because the brand gold is too faint on ivory for readable text.
+
 ## Trade-offs
 
 - **Static JSON, not a database.** At 65 entries a linear scan takes under a millisecond and works offline. Past roughly 10,000 entries the search would need an n-gram or trie index.
@@ -120,6 +128,7 @@ The files are generated from `data/words.json` at build time (`vite.config.js`),
 - **Simplified schwa rule.** It handles common words but not every compound.
 - **Web app, not an APK.** One link works on any phone with no install, and it can still be added to the home screen and used offline.
 - **No backend.** Saved and recent words live in the browser, so they stay on one device and don't sync. Storage errors (for example in private browsing) are caught, and the app works without them.
+- **Self-hosted fonts.** About 380 KB of fonts is cached for offline use. That is the price of the serif Devanagari headwords, which most phones cannot show with their built-in fonts.
 - **Hash links (`#/word/dharma`) rather than real paths.** They work on any static host with no server rewrite rules.
 
 ## With 2 more weeks
