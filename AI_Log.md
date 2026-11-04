@@ -2,7 +2,7 @@
 
 ## What I used
 
-I used Claude Code (Claude Opus 5.5) for most of this project. It helped me research Garuda Prakashan and how Indic search is usually done, plan the app, write the search and setup code, draft the dictionary entries, and later build the redesign, the Browse/Saved/Recent pages and the JSON files for other apps. I tested and reviewed what it gave me. I also used Claude to help tidy the wording of this log. The facts in it are from my own project.
+I used Claude Code (Claude Opus 5.5) for most of this project. It helped me research Garuda Prakashan and how Indic search is usually done, plan the app, write the search and setup code, draft the dictionary entries, and later build the redesign, the Browse/Saved/Recent pages and the JSON files for other apps. I tested and reviewed what it gave me.
 
 To check the output I used the Node test runner, the Vite build, and the app in the browser.
 
