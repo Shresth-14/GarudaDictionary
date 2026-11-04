@@ -1,0 +1,31 @@
+:root {
+  --bg: #fdfaf5;
+  --fg: #1f1a17;
+  --muted: #6b5e55;
+  --accent: #7a2e0e;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #171310; --fg: #f2ebe4; --muted: #b3a69b; --accent: #e59a6a; --card: #221c18; }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 18px/1.7 system-ui, "Noto Sans Devanagari", sans-serif;
+}
+header { position: sticky; top: 0; background: var(--bg); padding: 16px; }
+h1 { font-size: 1.1rem; margin: 0 0 8px; color: var(--accent); }
+h1 small { color: var(--muted); font-weight: normal; }
+input {
+  width: 100%; min-height: 48px; padding: 0 14px;
+  font: inherit; border: 2px solid var(--muted); border-radius: 10px;
+  background: var(--card); color: var(--fg);
+}
+input:focus { outline: none; border-color: var(--accent); }
+main { padding: 0 16px 32px; }
+article { background: var(--card); border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; }
+article h2 { font-size: 2rem; margin: 0; line-height: 1.6; }
+article p { margin: 0; }
+article p:nth-of-type(1) { color: var(--muted); }

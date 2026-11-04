@@ -1,0 +1,17 @@
+{
+  "name": "garuda-dictionary",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run validate && vite build",
+    "preview": "vite preview",
+    "validate": "node scripts/validate.mjs",
+    "test": "node scripts/validate.mjs && node --test"
+  },
+  "devDependencies": {
+    "vite": "^8.3.5",
+    "vite-plugin-pwa": "^2.0.0"
+  }
+}

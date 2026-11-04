@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#7a2e0e" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <title>Garuda Dictionary</title>
+  </head>
+  <body>
+    <header>
+      <h1>Garuda Dictionary <small>prototype</small></h1>
+      <input id="q" type="search" inputmode="search" enterkeyhint="search"
+        autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"
+        placeholder="dharm, धर्म, dharma" aria-label="Search in Devanagari or Roman letters" />
+    </header>
+    <main id="results" aria-live="polite"></main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
