@@ -8,7 +8,7 @@ export const setQuery = (q) => { try { sessionStorage.setItem(KEY, q); } catch {
 
 export function searchBox({ listbox, onInput, onSubmit, onEscape, onFocus }) {
   const input = el("input", {
-    class: "search-input", type: "text", value: getQuery(), placeholder: "Search a word · शब्द खोजें",
+    class: "search-input", type: "text", value: getQuery(), placeholder: "Search a word · खोजें",
     "aria-label": "Search the dictionary in Devanagari or Roman letters", role: "combobox",
     "aria-autocomplete": "list", "aria-controls": listbox.id, "aria-expanded": "false",
     autocomplete: "off", autocapitalize: "off", autocorrect: "off", spellcheck: "false",

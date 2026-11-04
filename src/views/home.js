@@ -4,26 +4,30 @@ import { el, icon, splitPos } from "../ui/dom.js";
 import { resultOption, wordHref } from "../ui/rows.js";
 import { searchBox, noResults } from "../ui/searchbox.js";
 
+// One tappable card: the headword's link is stretched over the whole card (see .wotd-word::after), so a thumb can land anywhere.
 function wordOfTheDaySection() {
   const w = wordOfTheDay();
-  const { pos } = splitPos(w.pos);
+  const { pos, gender } = splitPos(w.pos);
   return el("section", { class: "wotd", "aria-labelledby": "wotd-label" },
-    el("p", { class: "eyebrow ruled", id: "wotd-label" }, "Word of the day"),
-    el("div", { class: "wotd-body" },
-      el("a", { class: "wotd-word", href: wordHref(w), lang: "hi" }, w.headword),
+    el("p", { class: "eyebrow rule-after", id: "wotd-label" }, "Word of the day"),
+    el("article", { class: "wotd-card" },
+      el("div", { class: "wotd-main" },
+        el("a", { class: "wotd-word", href: wordHref(w), lang: "hi", "aria-label": `${w.headword}, ${w.transliteration}: open the full entry` }, w.headword),
+        el("p", { class: "wotd-iast", lang: "sa-Latn" }, w.transliteration),
+        el("p", { class: "wotd-pos" }, gender ? `${pos} · ${gender}` : pos)),
       el("div", { class: "wotd-text" },
-        el("p", { class: "wotd-meta" }, el("span", { class: "iast", lang: "sa-Latn" }, w.transliteration), ` · ${pos}`),
-        el("p", { class: "wotd-meaning" }, w.meanings[0])),
-      el("a", { class: "circle-link", href: wordHref(w), "aria-label": `Explore ${w.transliteration}` }, icon("arrow", 22))));
+        el("ol", { class: "wotd-meanings" }, ...w.meanings.slice(0, 3).map((m) => el("li", {}, m))),
+        w.example && el("p", { class: "wotd-example", lang: "hi" }, w.example),
+        el("span", { class: "wotd-cta", "aria-hidden": "true" }, "View full entry", icon("arrow", 18)))));
 }
 
 function shortcuts() {
   const item = (href, mark, label) => el("a", { class: "shortcut", href }, el("span", { class: "shortcut-mark" }, mark), el("span", {}, label));
   return el("nav", { class: "shortcuts", "aria-label": "Explore the collection" },
-    item("#/browse", el("span", { class: "glyph" }, "A–Z"), "Browse A–Z"),
+    item("#/browse", el("span", { class: "glyph" }, "A–Z"), "Browse A\u2060–\u2060Z"), // word joiners keep A–Z on one line
     item("#/browse/devanagari", el("span", { class: "glyph", lang: "hi" }, "अ"), "Devanagari index"),
-    item("#/saved", icon("bookmark", 28), "Saved words"),
-    item("#/recent", icon("clock", 28), "Recently viewed"));
+    item("#/saved", icon("bookmark", 26), "Saved words"),
+    item("#/recent", icon("clock", 26), "Recently viewed"));
 }
 
 export function renderHome(app, { signal }) {
