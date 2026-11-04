@@ -19,6 +19,7 @@ export function renderBrowse(app, script) {
     el("button", { type: "button", class: "toggle", "aria-pressed": pressed ? "true" : "false", onclick, ...attrs }, label);
 
   function render() {
+    const keep = letters.scrollLeft; // the letter strip scrolls sideways on phones: don't snap it back on every tap
     letters.replaceChildren(
       toggle("All", !state.letter, () => set({ letter: null })),
       ...(script === "deva" ? DEVA : LATIN).map((l) => toggle(l, state.letter === l, () => set({ letter: l }), {
@@ -28,6 +29,8 @@ export function renderBrowse(app, script) {
     posGroup.replaceChildren(
       toggle("All", !state.pos, () => set({ pos: null })),
       ...posValues(words).map((p) => toggle(p, state.pos === p, () => set({ pos: p }))));
+    letters.scrollLeft = keep;
+    letters.querySelector('[aria-pressed="true"]:not(:first-child)')?.scrollIntoView({ block: "nearest", inline: "center" });
     const all = browse(words, { script, letter: state.letter, pos: state.pos });
     count.textContent = `${all.length} word${all.length === 1 ? "" : "s"}`;
     list.replaceChildren(...all.slice(0, state.shown).map((w) => entryRow(w)));
