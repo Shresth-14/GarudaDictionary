@@ -2,11 +2,11 @@
   --bg: #fdfaf5;
   --fg: #1f1a17;
   --muted: #6b5e55;
-  --accent: #7a2e0e;
+  --accent: #c4000b; /* the logo's red, darkened slightly for text contrast */
   --card: #ffffff;
 }
 @media (prefers-color-scheme: dark) {
-  :root { --bg: #171310; --fg: #f2ebe4; --muted: #b3a69b; --accent: #e59a6a; --card: #221c18; }
+  :root { --bg: #171310; --fg: #f2ebe4; --muted: #b3a69b; --accent: #ff6b6b; --card: #221c18; }
 }
 * { box-sizing: border-box; }
 body {
@@ -16,7 +16,8 @@ body {
   font: 18px/1.7 system-ui, "Noto Sans Devanagari", sans-serif;
 }
 header { position: sticky; top: 0; background: var(--bg); padding: 16px; }
-h1 { font-size: 1.1rem; margin: 0 0 8px; color: var(--accent); }
+h1 { font-size: 1.1rem; margin: 0 0 8px; color: var(--accent); display: flex; align-items: center; gap: 8px; }
+h1 img { height: 38px; width: auto; }
 h1 small { color: var(--muted); font-weight: normal; }
 input {
   width: 100%; min-height: 48px; padding: 0 14px;

@@ -7,17 +7,21 @@ export default defineConfig({
   plugins: [
     VitePWA({
       registerType: "autoUpdate",
-      workbox: { globPatterns: ["**/*.{js,css,html,svg,png,woff2,json}"] },
+      // the 750 KB source logo stays out of the offline cache; the app uses the small PNGs made from it
+      workbox: { globPatterns: ["**/*.{js,css,html,png,woff2,json}"] },
       manifest: {
         name: "Garuda Dictionary (prototype)",
         short_name: "Garuda Kosh",
         description: "Hindi and Sanskrit words, searchable in Devanagari or Roman letters.",
-        theme_color: "#7a2e0e",
+        theme_color: "#c4000b",
         background_color: "#fdfaf5",
         display: "standalone",
         start_url: ".",
-        // TODO: add 192px and 512px PNG icons before submission; Chrome's install prompt needs them.
-        icons: [{ src: "icon.svg", sizes: "any", type: "image/svg+xml", purpose: "any" }],
+        icons: [
+          { src: "icon-192.png", sizes: "192x192", type: "image/png" },
+          { src: "icon-512.png", sizes: "512x512", type: "image/png" },
+          { src: "icon-maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
+        ],
       },
     }),
   ],
