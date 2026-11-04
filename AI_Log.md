@@ -1,47 +1,48 @@
 # AI Log
 
-## Tools
+## What I used
 
-| Tool | Used for |
-|---|---|
-| Claude Code (Claude Opus 5.5) | Researching Garuda Prakashan and Indic search techniques, planning the architecture, writing the search and setup code, and drafting dictionary entries. I reviewed and tested all of it. |
-| Claude Code (same workflow, later session work) | The second phase: editorial redesign (colour tokens, type scale, layouts), the Browse / Saved / Recent views, the word detail layout, and publishing the dataset as JSON for other apps and AI tools. |
-| Node test runner, Vite build, browser | Checking the AI's output |
+I used Claude Code (Claude Opus 5.5) for most of this project. It helped me research Garuda Prakashan and how Indic search is usually done, plan the app, write the search and setup code, draft the dictionary entries, and later build the redesign, the Browse/Saved/Recent pages and the JSON files for other apps. I tested and reviewed what it gave me. I also used Claude to help tidy the wording of this log. The facts in it are from my own project.
 
-**Chat:** Claude Code sessions. The first built the search, data and setup; later ones did the redesign, extra views and JSON API.
+To check the output I used the Node test runner, the Vite build, and the app in the browser.
 
-## Key decisions: what AI proposed, and what I kept, changed or rejected
+## What I kept, changed or rejected
 
-| Area | AI proposal | Outcome |
-|---|---|---|
-| Stack | Static Vite web app, offline-capable, hosted on GitHub Pages | **Kept.** I chose it over an Expo APK (free builds can queue 90+ minutes, and graders would have to sideload) and over Vercel's free plan (non-commercial use only, which conflicts with a publisher adopting the app). |
-| Search | Reduce every query (Devanagari, IAST or loose Roman) to one shared spelling key, then rank results in tiers | **Kept, with corrections.** Three of its first spelling rules merged different words: हरि became हर, and अग्नि and प्रिय broke. Tests caught them, the rules were removed, and each is now a regression test. |
-| Transliteration library | Use Sanscript to build search keys | **Rejected.** It treated शांति and शान्ति as different words and leaked stray nukta marks. The key builder is written by hand instead. |
-| Typo results | Show near matches alongside exact ones | **Changed.** A stress test showed "shakti" returning शांति and भक्ति as if they were answers. Near matches now appear only under "Did you mean…". |
-| Dataset source | Import entries from open-source dictionaries (Monier-Williams and Apte via the Cologne Digital Sanskrit Dictionaries, and Wiktionary via kaikki.org) | **Tried, then replaced.** I built the import, but bulk entries had no example sentences or romanised spellings and were too many to verify. The brief asks for entries in its own format, checked for accuracy, so I curated 65 entries myself with the help of AI, reviewed each one manually, and used Wiktionary only to cross-check genders. |
-| Integration | Make the dictionary usable by other apps and AI tools | **Kept, scoped down.** The build writes static JSON (`api/words.json`, `api/words/<slug>.json`) from `data/words.json`, plus an `llms.txt` guide, so it can't drift from the app. A `?q=dharm` search endpoint would need a server, so it is listed under "2 more weeks" rather than faked. These files are kept out of the offline cache because the app already bundles the words. |
-| Brand colour | Use the brand gold for text and metadata | **Changed.** Gold on ivory was too faint to read, so text uses a darker gold (#8A6D3B) and the brand gold is kept for rules and accents. |
-| Links | Real URL paths for each word | **Changed to hash links** (`#/word/dharma`). They work on any static host with no rewrite rules, and any spelling or Devanagari works in the link. |
-| Fonts | Rely on system fonts for Devanagari | **Changed to self-hosted fonts** (Noto Serif Devanagari, Inter; Latin and Devanagari subsets only). Most phones can't show serif Devanagari headwords, and self-hosting keeps them working offline, at about 380 KB. |
+**Stack.** Claude suggested a static Vite web app that works offline and is hosted on GitHub Pages. I kept it. I chose it over an Expo APK because free builds can queue for 90+ minutes and reviewers would have to sideload the file. I also skipped Vercel's free plan since it is non-commercial only, and Garuda is a publisher.
+
+**Search.** The idea was to turn every query (Devanagari, IAST or loose Roman) into one spelling key and then rank matches. I kept that, but fixed a few things. Three of its first spelling rules merged different words: हरि turned into हर, and अग्नि and प्रिय broke. The tests caught these, so I removed the rules and added each one as a regression test.
+
+**Transliteration library.** Claude proposed Sanscript for the search keys. I rejected it because it treats शांति and शान्ति as different words and leaves stray nukta marks. The key builder is written by hand.
+
+**Typo results.** At first near matches were shown next to exact ones. A stress test showed "shakti" returning शांति and भक्ति as if they were answers. Now near matches only appear under "Did you mean…".
+
+**Dataset.** I first built an import from open dictionaries (Monier-Williams and Apte through the Cologne dictionaries, and Wiktionary through kaikki.org). The bulk entries had no example sentences or romanised spellings, and there were too many to check. The brief wants entries in its own format and checked for accuracy, so I dropped the import. I curated 65 entries with AI help, went through each one by hand, and used Wiktionary only to cross-check genders.
+
+**JSON files for other apps and AI tools.** The build writes `api/words.json` and one file per word from `data/words.json`, plus an `llms.txt`. A real search endpoint (`?q=dharm`) needs a server, so I left it in the "2 more weeks" list.
+
+**Gold text.** The brand gold was too faint on the ivory background, so text uses a darker gold (#8A6D3B). The brand gold is only used for lines and accents.
+
+**Links.** I used hash links (`#/word/dharma`) instead of real paths, because they work on any static host without server rules.
+
+**Fonts.** I self-host Noto Serif Devanagari and Inter (Latin and Devanagari only, about 380 KB) so the serif headwords show on phones and work offline.
 
 ## Prompts that shaped the work
 
 1. *"Here are draft entries. Flag anything likely to be wrong (gender, IAST, anusvara vs chandrabindu, invented meanings) and say which reference to check it against. Don't fix anything yourself."*
-   The AI flagged आत्मा's gender (Hindi f. vs Sanskrit m.), योग's "sum" sense, the ṃ convention in IAST, and its own example sentences as needing review.
+   It flagged आत्मा's gender (Hindi f., Sanskrit m.), the "sum" meaning of योग, the ṃ convention in IAST, and its own example sentences.
 2. *"Give me real spellings Indian users would type that are likely to break my search."*
-   Of 28 spellings run through the search, 4 failed: shakti, yogi, satyam and vriksham. The fixes were a separate "Did you mean…" list and a stem guess for Sanskrit "-am" endings. All 28 now behave correctly, and each case is covered by a test.
-3. *"Why does it take dharma as karma?"* (after seeing "dharm" suggest कर्म in the browser)
-   धर्म wasn't in the live data yet, so कर्म, one letter away, was correctly shown only as a suggestion. Once the dataset was merged, "dharm" went straight to धर्म.
+   I ran 28 spellings. Four failed: shakti, yogi, satyam and vriksham. I fixed them with the separate "Did you mean…" list and a stem guess for Sanskrit "-am" endings. All 28 now work and each has a test.
+3. *"Why does it take dharma as karma?"*
+   I asked this after "dharm" suggested कर्म in the browser. धर्म was not in the live data yet, so कर्म (one letter away) correctly showed only as a suggestion. After the dataset was merged, "dharm" went straight to धर्म.
 
-## How I checked facts, data and code
+## How I checked things
 
-- **Grammatical gender:** cross-checked all 65 entries against Wiktionary's Hindi data. 61 matched, including आत्मा (f.) and योग's "sum" sense. The other 4 (वेद, पुराण, तपस्या, सूरज) had no Wiktionary noun entry to compare against.
-- **Search:** an automated test confirms that all 324 stored forms (headword, IAST and every romanised spelling) return their own entry first. Further tests check that no two headwords share a search key, that near pairs (sukh/dukh, ped/ved, gun/guru, pita/mata) stay apart, and that unseen spellings, typos, Unicode nukta forms and the English fallback all work.
-- **Dataset:** a validator runs before every build and test. It checks required fields, unique ids, Unicode normalisation (NFC), Devanagari-only headwords, and duplicate spellings across entries.
-- **Later features:** the saved and recent lists and the Browse filters have their own tests (`test/store.test.mjs`, `test/browse.test.mjs`). They cover newest-first order, no duplicates, the cap of 8, toggling saved words, broken storage not crashing the app, and letter and part-of-speech filters. Word links such as `#/word/dharm` and `#/word/धर्म` are tested to resolve to the right entry.
-- **Layout:** checked for horizontal overflow at 320, 375, 768 and 1440px.
-- **JSON API:** generated from `data/words.json` at build time, and the live URLs were requested after deploy to confirm they return the data.
-- **Example sentences:** read by native Hindi speakers, including myself.
-- **Unverified notes removed:** the AI drafted short "why not just *religion*?" notes for six words. I couldn't verify every claim in them, so I removed them rather than ship unchecked content.
-- **Attribution:** no Garuda dictionary product could be confirmed, so the app is presented as a prototype.
-- **Still open:** confirming the 4 unmatched genders in Platts.
+- **Gender:** I compared all 65 entries with Wiktionary's Hindi data. 61 matched, including आत्मा (f.) and योग. The other 4 (वेद, पुराण, तपस्या, सूरज) had no noun entry on Wiktionary to compare against.
+- **Search:** one test checks that all 324 stored forms (headword, IAST and every romanised spelling) return their own entry first. Other tests check that no two headwords share a key, that close pairs stay apart (sukh/dukh, ped/ved, gun/guru, pita/mata), and that unseen spellings, typos, nukta forms and the English fallback work.
+- **Dataset:** a validator runs before every build and test. It checks required fields, unique ids, NFC normalisation, Devanagari-only headwords and duplicate spellings across entries.
+- **Saved, recent and Browse:** these have their own tests (`test/store.test.mjs`, `test/browse.test.mjs`): newest first, no duplicates, a limit of 8, saving and unsaving, broken storage not crashing the app, and the letter and part-of-speech filters. Word links like `#/word/dharm` and `#/word/धर्म` are tested too.
+- **Layout:** I checked for sideways overflow at 320, 375, 768 and 1440px.
+- **Example sentences:** read by native Hindi speakers, including me.
+- **Removed:** Claude wrote short "why not just *religion*?" notes for six words. I couldn't verify every claim in them, so I took them out.
+- **Attribution:** I couldn't confirm an existing Garuda dictionary product, so the app is described as a prototype.
+- **Still open:** the 4 unmatched genders should be checked in Platts.
