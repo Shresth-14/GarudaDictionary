@@ -3,21 +3,47 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#c4000b" />
+    <meta name="theme-color" content="#F5F0E6" />
     <meta name="description" content="Hindi and Sanskrit words, searchable in Devanagari or Roman letters." />
     <link rel="icon" href="icon-192.png" type="image/png" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <title>Garuda Dictionary</title>
   </head>
   <body>
-    <header>
-      <h1><img src="logo.png" alt="Garuda" width="58" height="38" /> Dictionary <small>prototype</small></h1>
-      <input id="q" type="search" inputmode="search" enterkeyhint="search"
-        autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"
-        placeholder="dharm, धर्म, dharma" aria-label="Search in Devanagari or Roman letters" />
+    <a class="skip" href="#app">Skip to content</a>
+    <header class="masthead">
+      <div class="wrap masthead-row">
+        <a class="brand" href="#/" aria-label="Garuda Dictionary, home">
+          <img src="logo.png" alt="" width="66" height="44" />
+          <span class="brand-text"><span class="brand-name">Garuda</span><span class="brand-sub">Dictionary</span></span>
+        </a>
+        <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Menu"></button>
+        <nav id="site-nav" class="site-nav" aria-label="Main">
+          <a href="#/" data-nav="home">Dictionary</a>
+          <a href="#/browse" data-nav="browse">Browse</a>
+          <a href="#/about" data-nav="about">About</a>
+        </nav>
+        <a class="icon-link saved-link" href="#/saved" data-nav="saved" aria-label="Saved words"></a>
+      </div>
     </header>
-    <main id="results" aria-live="polite"></main>
-    <footer>For developers and AI tools: <a href="api/words.json">word list (JSON)</a> · <a href="llms.txt">llms.txt</a></footer>
+    <main id="app" class="wrap" tabindex="-1"></main>
+    <footer class="site-footer">
+      <div class="wrap footer-row">
+        <div>
+          <p class="footer-brand">Garuda Dictionary</p>
+          <p class="footer-line">A prototype dictionary of Hindi and Sanskrit words for Garuda Prakashan.</p>
+          <p><a href="#/about">About</a></p>
+        </div>
+        <div>
+          <p class="footer-label">Developer resources</p>
+          <ul class="footer-links">
+            <li><a href="api/words.json">Word list (JSON)</a></li>
+            <li><a href="llms.txt">llms.txt</a></li>
+            <li><a href="https://github.com/Shresth-14/GarudaDictionary">Source code</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
