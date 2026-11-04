@@ -3,7 +3,7 @@ import { idx } from "../data.js";
 import { addRecent, isSaved, toggleSaved } from "../store.js";
 import { el, icon, splitPos } from "../ui/dom.js";
 import { resultOption, wordHref } from "../ui/rows.js";
-import { searchBox, getQuery, noResults } from "../ui/searchbox.js";
+import { searchBox, getQuery, setQuery, noResults } from "../ui/searchbox.js";
 import { listenButton } from "../ui/speak.js";
 
 function entry(w) {
@@ -51,7 +51,7 @@ function entry(w) {
       section("Also spelled", el("ul", { class: "pills", lang: "hi-Latn" }, ...w.romanised.map((r) => el("li", {}, r)))));
 }
 
-export function renderWord(app, key) {
+export function renderWord(app, key, { embed = false } = {}) {
   const w = findEntry(idx, key);
   const list = el("div", { id: "results-list", class: "results-list", role: "listbox", "aria-label": "Matching words" });
   const column = el("aside", { class: "results", "aria-label": "Search results" });
@@ -95,10 +95,17 @@ export function renderWord(app, key) {
       el("p", {}, el("a", { href: "#/" }, "Back to the dictionary"))));
   } else {
     document.title = `${w.headword} (${w.transliteration}) · Garuda Dictionary`;
-    addRecent(w.id);
+    if (!embed) addRecent(w.id);
     detail.append(entry(w));
   }
 
+  if (embed) { // just the entry, with a credit link back to the full app
+    const full = location.href.replace(/\?embed=1$/, "");
+    app.replaceChildren(detail, el("p", { class: "embed-credit" },
+      el("a", { href: full, target: "_blank", rel: "noopener" }, "Open in Garuda Dictionary ↗")));
+    return;
+  }
   app.replaceChildren(el("div", { class: "search-wrap top" }, box.form), layout);
-  fillColumn(getQuery().trim(), false);
+  // a word we don't have (for example typed in the browser's search bar) shows the nearest guesses beside the message
+  if (!w) { setQuery(key); fillColumn(key, true); } else fillColumn(getQuery().trim(), false);
 }

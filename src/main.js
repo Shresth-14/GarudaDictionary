@@ -23,7 +23,7 @@ menuBtn.addEventListener("click", () => {
 });
 
 const ROUTES = [
-  [/^#\/word\/(.+)$/, "home", (m) => renderWord(app, decodeURIComponent(m[1]))],
+  [/^#\/word\/(.+)$/, "home", (m, embed) => renderWord(app, decodeURIComponent(m[1]), { embed })],
   [/^#\/browse\/devanagari$/, "browse", () => renderBrowse(app, "deva")],
   [/^#\/browse$/, "browse", () => renderBrowse(app, "latin")],
   [/^#\/saved$/, "saved", () => renderSaved(app)],
@@ -38,8 +38,12 @@ function route(first = false) {
   stopSpeaking(); // never keep talking after the page changes
   cleanup?.abort();
   cleanup = new AbortController();
-  const hit = ROUTES.map(([re, section, view]) => [location.hash.match(re), section, view]).find(([m]) => m);
-  if (hit) hit[2](hit[0]);
+  // "#/word/dharma?embed=1" is the chrome-free card other sites put in an iframe
+  const [path, query = ""] = location.hash.split("?");
+  const embed = new URLSearchParams(query).get("embed") === "1";
+  document.documentElement.toggleAttribute("data-embed", embed);
+  const hit = ROUTES.map(([re, section, view]) => [path.match(re), section, view]).find(([m]) => m);
+  if (hit) hit[2](hit[0], embed);
   else renderHome(app, { signal: cleanup.signal });
   const section = hit ? hit[1] : "home";
   for (const a of document.querySelectorAll("[data-nav]")) a.toggleAttribute("aria-current", a.dataset.nav === section);
