@@ -39,3 +39,10 @@ export function search(idx,q){
   if(!results.length&&!suggestions.length) for(const x of idx) if(x.en.has(ql)) results.push({s:20,e:x.e}); // reverse English only as fallback
   return {results:rank(results), suggestions:rank(suggestions)};
 }
+
+// Word links: #/word/<first romanised spelling>, e.g. #/word/dharma. Any spelling or Devanagari also resolves,
+// so #/word/dharm and #/word/धर्म open the same entry; a link never resolves to a mere suggestion.
+export const slug = e => e.romanised[0];
+export function findEntry(idx, s){
+  return idx.find(x=>slug(x.e)===s)?.e ?? search(idx,s).results[0] ?? null;
+}

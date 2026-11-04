@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { skeleton } from "../src/normalise.js";
-import { buildIndex, search } from "../src/search.js";
+import { buildIndex, search, findEntry, slug } from "../src/search.js";
 
 const words = JSON.parse(readFileSync(new URL("../data/words.json", import.meta.url), "utf8"));
 const idx = buildIndex(words);
@@ -80,4 +80,13 @@ test("skeleton regression guards (over-eager rules broke these)", () => {
   assert.equal(skeleton("priya"), skeleton("प्रिय"));
   // precomposed ज़ (U+095B) and ज + nukta must give the same key
   assert.equal(skeleton("ज़मीन"), skeleton("ज़मीन"));
+});
+
+test("word links (#/word/...) resolve to the right entry", () => {
+  for (const w of words) assert.equal(findEntry(idx, slug(w))?.id, w.id, slug(w));
+  assert.equal(findEntry(idx, "dharma").headword, "धर्म");
+  assert.equal(findEntry(idx, "dharm").headword, "धर्म");   // any spelling works
+  assert.equal(findEntry(idx, "धर्म").headword, "धर्म");    // so does Devanagari
+  assert.equal(findEntry(idx, "xyzq"), null);
+  assert.equal(findEntry(idx, "prakesh"), null);          // a typo suggestion is not a link target
 });

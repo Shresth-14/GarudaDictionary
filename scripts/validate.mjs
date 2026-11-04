@@ -24,6 +24,9 @@ for (const w of words) {
   for (const s of [w.headword, w.transliteration, w.example, ...w.romanised, ...w.meanings])
     if (!nfc(s)) errors.push(`${at}: "${s}" is not NFC-normalised`);
 
+  // the first romanised spelling is the entry's link (#/word/dharma), so it must be plain lowercase letters
+  if (!/^[a-z]+$/.test(w.romanised[0])) errors.push(`${at}: first romanised spelling "${w.romanised[0]}" must be lowercase a–z (it is the word link)`);
+
   for (const r of w.romanised) {
     const v = r.toLowerCase();
     if (variantOwner.has(v) && variantOwner.get(v) !== w.id && !w.homograph)
