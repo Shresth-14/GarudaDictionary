@@ -6,6 +6,9 @@
 
 - [All entries](https://shresth-14.github.io/GarudaDictionary/api/words.json): JSON array of every entry
 - [One entry](https://shresth-14.github.io/GarudaDictionary/api/words/dharma.json): `api/words/<slug>.json`, where the slug is the entry's first romanised spelling (dharma, shiksha, gyan…)
+- [Index of every entry](https://shresth-14.github.io/GarudaDictionary/api/index.json): slugs with api, page and embed links
+- [Dataset info](https://shresth-14.github.io/GarudaDictionary/api/meta.json): version, entry count, fields, licence status
+- Embed a clean entry card in an iframe: `https://shresth-14.github.io/GarudaDictionary/#/word/dharma?embed=1`
 - [Open a word in the app](https://shresth-14.github.io/GarudaDictionary/#/word/dharma): `#/word/<any spelling>` (dharm, dharam and धर्म all work)
 
 Entry fields: `id`, `headword`, `transliteration`, `romanised`, `pos`, `meanings`, `example`.
