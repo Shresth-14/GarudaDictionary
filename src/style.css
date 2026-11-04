@@ -48,4 +48,14 @@ blockquote { margin: 0; padding: 8px 12px; border-left: 3px solid var(--accent);
   border: 2px solid var(--accent); background: transparent; color: var(--accent); font: inherit; font-weight: 600;
 }
 .missing { padding: 12px 0; }
+
+.empty { padding: 8px 0; }
+.empty h2 { font-size: 1.3rem; margin: 0 0 6px; overflow-wrap: anywhere; }
+.empty p { margin: 0 0 8px; color: var(--muted); }
+.try-label { font-weight: 600; }
+.tries { display: flex; flex-wrap: wrap; gap: 8px; }
+.tries button {
+  min-height: 44px; padding: 0 16px; border-radius: 999px; font: inherit;
+  border: 2px solid var(--accent); background: transparent; color: var(--accent);
+}
 main > h3 { font-size: 0.95rem; color: var(--muted); font-weight: 600; margin: 16px 0 8px; }

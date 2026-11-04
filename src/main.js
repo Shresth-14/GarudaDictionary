@@ -25,9 +25,28 @@ function card(w) {
     el("p", {}, w.meanings.join("; ")));
 }
 
+const EXAMPLES = ["dharm", "धर्म", "shaanthi", "gyan", "vruksha"];
+
+// shown before the first keystroke and when nothing matches
+function hint(title) {
+  const tries = el("div", { class: "tries" }, ...EXAMPLES.map((t) => {
+    const b = el("button", { type: "button", lang: /[ऀ-ॿ]/.test(t) ? "hi" : "hi-Latn" }, t);
+    b.addEventListener("click", () => { q.value = t; renderList(); q.focus(); });
+    return b;
+  }));
+  return el("section", { class: "empty" },
+    el("h2", {}, title),
+    el("p", {}, "Type a Hindi or Sanskrit word in Devanagari or Roman letters. dharm, dharma and धर्म all find the same word."),
+    el("p", { class: "try-label" }, "Try:"),
+    tries);
+}
+
 function renderList() {
   document.title = TITLE;
-  const { results, suggestions } = search(idx, q.value);
+  const query = q.value.trim();
+  const { results, suggestions } = search(idx, query);
+  if (!query) return out.replaceChildren(hint("Search the dictionary"));
+  if (!results.length && !suggestions.length) return out.replaceChildren(hint(`No match for “${query}”`));
   const nodes = results.map(card);
   if (suggestions.length) nodes.push(el("h3", {}, results.length ? "Similar words" : "Did you mean…"), ...suggestions.map(card));
   out.replaceChildren(...nodes);
