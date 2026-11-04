@@ -20,6 +20,8 @@ A phone-first, offline-capable prototype front-end for Garuda Prakashan's dictio
 | **Bonus:** works offline | A service worker caches the app, dataset and fonts after the first visit |
 | **Bonus:** recent searches or bookmarks | The last 8 words viewed, plus saved words (Save on any entry, Remove on the Saved page) |
 
+| **Extra:** hear the word | A speaker button on every entry reads the headword aloud, and a Listen button reads the example sentence at a slower pace. It uses the phone's own Hindi voice, so it needs no audio files and works offline. If the device has no Hindi voice, the app says so instead of mispronouncing silently |
+
 Also: a **word of the day** on the home page, and a **Browse** view with an A–Z index, a Devanagari (अ–ह) index and part-of-speech filters.
 
 ## How to run
@@ -44,7 +46,7 @@ Every push to `main` runs the tests, builds and deploys to GitHub Pages (`.githu
 | `src/browse.js` | Letter indexes and filters for Browse (no DOM, unit-tested) |
 | `src/main.js` | Routes the URL hash to a view, with no router library |
 | `src/views/` | Home, word (results + entry), browse, and saved / recent / about |
-| `src/ui/` | Shared search box (ARIA combobox), result rows, icons and the `el()` helper |
+| `src/ui/` | Shared search box (ARIA combobox), result rows, the speaker button (`speak.js`), icons and the `el()` helper |
 | `src/style.css` | Design tokens (ivory, maroon, gold), type scale and layouts |
 | `scripts/validate.mjs` | Dataset checks, run before every test and build |
 | `test/` | Search tests on the real dataset, including Indic edge cases; storage and browse tests |
@@ -139,7 +141,7 @@ Swiss grid and editorial type on an ivory canvas: deep maroon (#682B38) for inte
 
 - A larger, editor-reviewed dataset, with Garuda's editors checking every entry.
 - Short notes on words that lose meaning in translation (dharma ≠ "religion"), reviewed by Garuda's editors.
-- Audio pronunciation recorded by native speakers.
+- Pronunciation recorded by native speakers. The current speaker button uses the phone's built-in voice, whose quality varies by device.
 - A search API (`?q=dharm`) and an embeddable widget, so other sites, apps and AI assistants can look up any spelling, not just exact slugs. This needs a small server or edge function, because the current files are static.
 - Learning new spelling variants from what users actually search for.
 
