@@ -6,7 +6,7 @@ A phone-first, offline-capable prototype front-end for Garuda Prakashan's dictio
 
 - **Live app:** https://shresth-14.github.io/GarudaDictionary/
 - **Demo video:** _add link_
-- **Dataset:** 65 curated entries in [`data/words.json`](data/words.json)
+- **Dataset:** 66 curated entries in [`data/words.json`](data/words.json)
 
 ## Features
 
@@ -94,16 +94,17 @@ The extra-"a" rule (step 4) exists because Hindi doesn't pronounce the vowel peo
 - **Matching spellings:** half-न vs anusvara (शान्ति = शांति), and South Indian "th" (shanthi).
 - **Rule guards:** हरि must not collapse to हर, and अग्नि and प्रिय must survive.
 - **Near pairs stay apart:** sukh/dukh, ped/ved, gun/guru, pita/mata.
-- **Coverage:** all 324 stored forms in the dataset return their own entry first.
+- **Coverage:** all 331 stored forms in the dataset return their own entry first.
 
 ## Data
 
-There are 65 entries:
+There are 66 entries:
 - the 10 starter entries, unchanged;
 - 33 Indic and civilisational terms (dharma, yoga, guru, ātmā, mokṣa, saṃskṛti, yajña, darśana…);
-- 22 everyday words (pānī, ghar, kitāb, nadī, phūl, sapnā…).
+- 22 everyday words (pānī, ghar, kitāb, nadī, phūl, sapnā…);
+- 1 entry added by the author: श्रेष्ठ (śreṣṭha, "best"), which is also his name.
 
-Entries were drafted with AI and reviewed by hand. Genders were cross-checked against Wiktionary's Hindi data (61 of 65 matched; the rest are listed in the AI log), and example sentences were read by native Hindi speakers. Words were chosen so that no two headwords share a search key, and a test enforces this.
+Entries were drafted with AI and reviewed by hand. Genders were cross-checked against Wiktionary's Hindi data (61 of the first 65 matched; the rest are listed in the AI log; श्रेष्ठ is an adjective, so it has no gender to compare), and example sentences were read by native Hindi speakers. Words were chosen so that no two headwords share a search key, and a test enforces this.
 
 ## Using the dictionary in other apps and AI tools
 
@@ -128,7 +129,7 @@ Swiss grid and editorial type on an ivory canvas: deep maroon (#682B38) for inte
 
 ## Trade-offs
 
-- **Static JSON, not a database.** At 65 entries a linear scan takes under a millisecond and works offline. Past roughly 10,000 entries the search would need an n-gram or trie index.
+- **Static JSON, not a database.** At 66 entries a linear scan takes under a millisecond and works offline. Past roughly 10,000 entries the search would need an n-gram or trie index.
 - **A hand-written key builder, not a transliteration library.** Sanscript and similar tools are built for display. They keep the silent "a" and treat शांति and शान्ति as different words, so they make poor search keys.
 - **A lossy key.** Folding spellings means some real pairs share a key (कम and काम both become "kam"). Ranking and the stored spellings resolve this. The curated set avoids such pairs, and adding them later would need a test like the near-pairs one.
 - **Simplified schwa rule.** It handles common words but not every compound.
