@@ -117,7 +117,7 @@ The brief asks how the dictionary can plug into other apps, AI tools and platfor
 | **Index** | [`/api/index.json`](https://shresth-14.github.io/GarudaDictionary/api/index.json) | Every slug with its `api`, `page` and `embed` links, so an app can sync without guessing names |
 | **Dataset info** | [`/api/meta.json`](https://shresth-14.github.io/GarudaDictionary/api/meta.json) | Version, build time, entry count, field names and licence status, so an app can tell when the data changed |
 | **Link to a word** | [`/#/word/dharm`](https://shresth-14.github.io/GarudaDictionary/#/word/dharm) | Any spelling or Devanagari opens the same entry |
-| **Embed a word** | `<iframe src=".../#/word/dharma?embed=1">` | A clean entry card (no menu or footer) for blogs, Notion, course pages |
+| **Embed a word** | `<iframe src=".../#/word/dharma?embed=1">` | A clean entry card (no menu or footer) for blogs, Notion, course pages. Use a height of about 760px: the tallest of the 66 cards needs 688px on a wide page and 732px on a phone-width one |
 | **Browser search bar** | [`/opensearch.xml`](https://shresth-14.github.io/GarudaDictionary/opensearch.xml) | Add "Garuda Dictionary" as a search engine, then type `dharm` in the address bar |
 | **AI assistants** | [`/llms.txt`](https://shresth-14.github.io/GarudaDictionary/llms.txt) | A plain-text guide to all of the above |
 
@@ -135,7 +135,7 @@ console.log(w.headword, w.meanings); // धर्म ["righteous duty", ...]
 ```html
 <!-- an entry card on any page -->
 <iframe src="https://shresth-14.github.io/GarudaDictionary/#/word/dharma?embed=1"
-        width="100%" height="560" style="border:0" title="धर्म, Garuda Dictionary"></iframe>
+        width="100%" height="760" style="border:0" title="धर्म, Garuda Dictionary"></iframe>
 ```
 
 **Browser search bar.** The site advertises `opensearch.xml`, so Firefox offers to add it. In Chrome, add it by hand: Settings → Search engine → Manage search engines and site search → Add, with the URL `https://shresth-14.github.io/GarudaDictionary/#/word/%s`. A word the dictionary doesn't have shows the nearest suggestions.
