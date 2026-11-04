@@ -43,6 +43,13 @@ test("an extra schwa never turns one stored word into another", () => {
     assert.ok(!keys.has(v), `${head} (${k}) collides with ${keys.get(v)} once an "a" is dropped`);
 });
 
+test("while typing, words spelled that way come first", () => {
+  const sha = search(idx, "sha").results.map((w) => w.headword);
+  assert.ok(sha.length > 0, "no list while typing");
+  assert.deepEqual(sha.slice(0, 3).sort(), ["शक्ति", "शब्द", "शांति"].sort()); // shabd, shanti, shakti, before samay and sukh
+  assert.ok(search(idx, "dh").results.length > 0);
+});
+
 test("a clear match comes without guesses beside it", () => {
   assert.equal(top("dhyan"), "ध्यान");
   assert.deepEqual(search(idx, "dhyan").suggestions, []);  // not ज्ञान

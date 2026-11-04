@@ -36,6 +36,8 @@ export function search(idx,q){
   // ponytail: Sanskrit nominative -am (satyam, vriksham) tried as a stem guess only; kalam must not confidently mean कल.
   const stem = k.length>=5&&k.endsWith('am') ? k.slice(0,-2) : null;
   const variants = schwaVariants(k);
+  // live typing: "sha" folds to the one-letter key "s", but it should already list शब्द, शांति, शक्ति… rather than "No match"
+  const prefixOk = k.length>=3 || (k.length>=1 && (q.length>=2 || /[ऀ-ॿ]/.test(q)));
   const results=[], suggestions=[];
   for(const x of idx){
     let s=0, guess=false;
@@ -43,7 +45,7 @@ export function search(idx,q){
     else if(x.forms.has(ql)) s=90;
     else if(x.keys.has(k)) s=80;
     else if([...variants].some(v=>x.keys.has(v))) s=70;
-    else if(k.length>=3&&[...x.keys].some(y=>y.startsWith(k))) s=60;
+    else if(prefixOk&&[...x.keys].some(y=>y.startsWith(k))) s=[...x.forms].some(f=>f.startsWith(ql))?65:60; // spelled the way it was typed ranks first
     else if(stem&&x.keys.has(stem)) { s=35; guess=true; }
     else if(md){ const d=Math.min(...[...x.keys].map(y=>osa(k,y))); if(d<=md) { s=40-10*d; guess=true; } }
     if(s) (guess?suggestions:results).push({s,e:x.e});
