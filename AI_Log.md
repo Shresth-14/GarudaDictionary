@@ -19,6 +19,10 @@
 | Transliteration library | Use Sanscript to build search keys | **Rejected.** It treated शांति and शान्ति as different words and leaked stray nukta marks. The key builder is written by hand instead. |
 | Typo results | Show near matches alongside exact ones | **Changed.** A stress test showed "shakti" returning शांति and भक्ति as if they were answers. Near matches now appear only under "Did you mean…". |
 | Dataset source | Import entries from open-source dictionaries (Monier-Williams and Apte via the Cologne Digital Sanskrit Dictionaries, and Wiktionary via kaikki.org) | **Tried, then replaced.** I built the import, but bulk entries had no example sentences or romanised spellings and were too many to verify. The brief asks for entries in its own format, checked for accuracy, so I curated 65 entries myself with the help of AI, reviewed each one manually, and used Wiktionary only to cross-check genders. |
+| Integration | Make the dictionary usable by other apps and AI tools | **Kept, scoped down.** The build writes static JSON (`api/words.json`, `api/words/<slug>.json`) from `data/words.json`, plus an `llms.txt` guide, so it can't drift from the app. A `?q=dharm` search endpoint would need a server, so it is listed under "2 more weeks" rather than faked. These files are kept out of the offline cache because the app already bundles the words. |
+| Brand colour | Use the brand gold for text and metadata | **Changed.** Gold on ivory was too faint to read, so text uses a darker gold (#8A6D3B) and the brand gold is kept for rules and accents. |
+| Links | Real URL paths for each word | **Changed to hash links** (`#/word/dharma`). They work on any static host with no rewrite rules, and any spelling or Devanagari works in the link. |
+| Fonts | Rely on system fonts for Devanagari | **Changed to self-hosted fonts** (Noto Serif Devanagari, Inter; Latin and Devanagari subsets only). Most phones can't show serif Devanagari headwords, and self-hosting keeps them working offline, at about 380 KB. |
 
 ## Prompts that shaped the work
 
