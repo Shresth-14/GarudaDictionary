@@ -38,6 +38,9 @@
 - **Grammatical gender:** cross-checked all 65 entries against Wiktionary's Hindi data. 61 matched, including आत्मा (f.) and योग's "sum" sense. The other 4 (वेद, पुराण, तपस्या, सूरज) had no Wiktionary noun entry to compare against.
 - **Search:** an automated test confirms that all 324 stored forms (headword, IAST and every romanised spelling) return their own entry first. Further tests check that no two headwords share a search key, that near pairs (sukh/dukh, ped/ved, gun/guru, pita/mata) stay apart, and that unseen spellings, typos, Unicode nukta forms and the English fallback all work.
 - **Dataset:** a validator runs before every build and test. It checks required fields, unique ids, Unicode normalisation (NFC), Devanagari-only headwords, and duplicate spellings across entries.
+- **Later features:** the saved and recent lists and the Browse filters have their own tests (`test/store.test.mjs`, `test/browse.test.mjs`). They cover newest-first order, no duplicates, the cap of 8, toggling saved words, broken storage not crashing the app, and letter and part-of-speech filters. Word links such as `#/word/dharm` and `#/word/धर्म` are tested to resolve to the right entry.
+- **Layout:** checked for horizontal overflow at 320, 375, 768 and 1440px.
+- **JSON API:** generated from `data/words.json` at build time, and the live URLs were requested after deploy to confirm they return the data.
 - **Example sentences:** read by native Hindi speakers, including myself.
 - **Unverified notes removed:** the AI drafted short "why not just *religion*?" notes for six words. I couldn't verify every claim in them, so I removed them rather than ship unchecked content.
 - **Attribution:** no Garuda dictionary product could be confirmed, so the app is presented as a prototype.
