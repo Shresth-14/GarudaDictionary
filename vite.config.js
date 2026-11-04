@@ -24,14 +24,15 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       // the 750 KB source logo stays out of the offline cache; the app uses the small PNGs made from it
-      // the app already bundles the words, so the public API files are left out too
-      workbox: { globPatterns: ["**/*.{js,css,html,png,woff2,json}"], globIgnores: ["api/**"] },
+      // the app already bundles the words, so the public API files are left out too;
+      // Inter's non-Latin subsets are never used, so they are not cached for offline either
+      workbox: { globPatterns: ["**/*.{js,css,html,png,woff2,json}"], globIgnores: ["api/**", "**/*-{cyrillic,cyrillic-ext,greek,greek-ext,vietnamese}-*.woff2"] },
       manifest: {
         name: "Garuda Dictionary (prototype)",
         short_name: "Garuda Kosh",
         description: "Hindi and Sanskrit words, searchable in Devanagari or Roman letters.",
-        theme_color: "#c4000b",
-        background_color: "#fdfaf5",
+        theme_color: "#682B38",
+        background_color: "#F5F0E6",
         display: "standalone",
         start_url: ".",
         icons: [
