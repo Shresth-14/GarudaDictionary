@@ -19,7 +19,7 @@ test("letter and part-of-speech filters", () => {
   assert.equal(devaLetter({ headword: "ज़मीन" }), "ज"); // nukta letters file under their base letter
   const fem = browse(words, { pos: "noun (f.)" });
   assert.ok(fem.length > 0 && fem.every((w) => w.pos === "noun (f.)"));
-  assert.deepEqual(posValues(words), ["interjection", "noun (f.)", "noun (m.)"]);
+  assert.deepEqual(posValues(words), ["adjective", "interjection", "noun (f.)", "noun (m.)"]);
 });
 
 test("results are sorted", () => {

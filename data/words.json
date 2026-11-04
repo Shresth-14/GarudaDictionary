@@ -63,5 +63,6 @@
   {"id":62,"headword":"पृथ्वी","transliteration":"pṛthvī","romanised":["prithvi","pruthvi","prithvee","prthvi"],"pos":"noun (f.)","meanings":["the Earth (planet)","ground"],"example":"पृथ्वी सूरज के चारों ओर घूमती है।"},
   {"id":63,"headword":"नमस्ते","transliteration":"namaste","romanised":["namaste","namastey","namasthe"],"pos":"interjection","meanings":["respectful greeting or farewell (literally 'I bow to you')"],"example":"उसने हाथ जोड़कर नमस्ते कहा।"},
   {"id":64,"headword":"सुख","transliteration":"sukha","romanised":["sukh","sukha"],"pos":"noun (m.)","meanings":["happiness, comfort","well-being"],"example":"सबके सुख में ही अपना सुख है।"},
-  {"id":65,"headword":"दुःख","transliteration":"duḥkha","romanised":["dukh","dukkha","dukha","duhkha"],"pos":"noun (m.)","meanings":["sorrow, pain","suffering"],"example":"उसकी बात सुनकर मुझे दुःख हुआ।"}
+  {"id":65,"headword":"दुःख","transliteration":"duḥkha","romanised":["dukh","dukkha","dukha","duhkha"],"pos":"noun (m.)","meanings":["sorrow, pain","suffering"],"example":"उसकी बात सुनकर मुझे दुःख हुआ।"},
+  {"id":66,"headword":"श्रेष्ठ","transliteration":"śreṣṭha","romanised":["shreshth","shreshtha","shresth","shrestha","sreshth"],"pos":"adjective","meanings":["best, most excellent","superior, of the highest quality"],"example":"ज्ञान सबसे श्रेष्ठ धन है।"}
 ]
