@@ -12,15 +12,14 @@ A phone-first, offline-capable prototype front-end for Garuda Prakashan's dictio
 
 | Brief | What the app does |
 |---|---|
-| **Must:** Devanagari and Roman search return the same entry | धर्म, dharma, dharm, dharam and DHARMA all open धर्म, including spellings that aren't stored (shaanthi, vruksha, zameen) |
-| **Must:** entry detail screen with all fields | Headword, IAST, part of speech and gender, numbered meanings, example sentence and every romanised spelling. After a search, results sit in a column beside the entry. Each word has its own link (`#/word/dharma`), and any spelling works in the link (`#/word/dharm`, `#/word/धर्म`) |
-| **Must:** works well on a phone | A deliberate single-column phone layout: compact masthead with a menu, results as a scrolling strip of pills, 44px+ tap targets and large Devanagari type. Checked for overflow at 320, 375, 768 and 1440px. Installable to the home screen |
-| **Must:** clear no-results state | Shows the query, explains what to type, and offers example searches to tap |
-| **Bonus:** typo-tolerant search | Typos are offered under "Did you mean…", never shown as if they were the answer. The search dropdown works with ArrowUp/ArrowDown, Enter and Escape |
-| **Bonus:** works offline | A service worker caches the app, dataset and fonts after the first visit |
-| **Bonus:** recent searches or bookmarks | The last 8 words viewed, plus saved words (Save on any entry, Remove on the Saved page) |
-
-| **Extra:** hear the word | A speaker button on every entry reads the headword aloud, and a Listen button reads the example sentence at a slower pace. It uses the phone's own Hindi voice, so it needs no audio files and works offline. If the device has no Hindi voice, the app says so instead of mispronouncing silently |
+| Devanagari and Roman search return the same entry | धर्म, dharma, dharm, dharam and DHARMA all open धर्म, including spellings that aren't stored (shaanthi, vruksha, zameen) |
+| entry detail screen with all fields | Headword, IAST, part of speech and gender, numbered meanings, example sentence and every romanised spelling. After a search, results sit in a column beside the entry. Each word has its own link (`#/word/dharma`), and any spelling works in the link (`#/word/dharm`, `#/word/धर्म`) |
+| works well on a phone | A deliberate single-column phone layout: compact masthead with a menu, results as a scrolling strip of pills, 44px+ tap targets and large Devanagari type. Checked for overflow at 320, 375, 768 and 1440px. Installable to the home screen |
+| clear no-results state | Shows the query, explains what to type, and offers example searches to tap |
+| typo-tolerant search | Typos are offered under "Did you mean…", never shown as if they were the answer. The search dropdown works with ArrowUp/ArrowDown, Enter and Escape |
+| works offline | A service worker caches the app, dataset and fonts after the first visit |
+| recent searches or bookmarks | The last 8 words viewed, plus saved words (Save on any entry, Remove on the Saved page) |
+| Hear the word | A speaker button on every entry reads the headword aloud, and a Listen button reads the example sentence at a slower pace. It uses the phone's own Hindi voice, so it needs no audio files and works offline. If the device has no Hindi voice, the app says so instead of mispronouncing silently |
 
 Also: a **word of the day** on the home page, and a **Browse** view with an A–Z index, a Devanagari (अ–ह) index and part-of-speech filters.
 
@@ -97,6 +96,8 @@ The extra-"a" rule (step 4) exists because Hindi doesn't pronounce the vowel peo
 - **Coverage:** all 331 stored forms in the dataset return their own entry first.
 
 ## Data
+
+Each entry has a headword (Devanagari), a transliteration (IAST), common romanised spellings, a part of speech, meanings, and an example sentence.
 
 There are 66 entries:
 - the 10 starter entries, unchanged;
