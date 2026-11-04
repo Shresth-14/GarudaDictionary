@@ -35,14 +35,41 @@ To check the output I used the Node test runner, the Vite build, and the app in 
 3. *"Why does it take dharma as karma?"*
    I asked this after "dharm" suggested कर्म in the browser. धर्म was not in the live data yet, so कर्म (one letter away) correctly showed only as a suggestion. After the dataset was merged, "dharm" went straight to धर्म.
 
+### Later prompts (prompts lightly cleaned up from what I typed)
+
+4. *"Read the guidelines completely. Check what is done, what is left, and what I can improve for selection."*
+   This turned up the biggest problem: the GitHub repo was still private, and the brief says private repos can't be reviewed. It also showed the demo video and Drive folder were still missing.
+5. *"Why is the deployed version still showing the old design?"* (with a screenshot of the live site)
+   The server already had the new build. My browser was showing the old one from the service worker cache, and the fix is to clear site data and reload.
+6. *"When I clear the search bar it should go back to the home page. Also fix the real-world typing gaps."*
+   Clearing the search now returns to home with the cursor still in the box. For typing, I tested 134 spellings and 13 failed. Most were an extra "a" people type (karam, shabad, sapana, करम). I added a rule for that and a test that it never turns one stored word into another. I also stopped showing "Did you mean" guesses next to a clear match.
+7. *"The mobile version is broken. Keep everything working, but fix the layout on mobile and smaller screens, because most of our users are on phones. Also fix the UI and UX of the word of the day section."*
+   I checked the app at 320, 360, 375, 390 and 768px. The word of the day became one tappable card, the Browse letters became a sideways-scrolling strip, and Save and Share got bigger buttons. At 320px some items ran past the page margin even though nothing scrolled sideways, so I added a stricter check for that. Typing "sha" showed "No match", so short prefixes now list words, with words spelled that way first.
+8. *"What were the key things in the guidelines that should be built, including the key implementation points and everything else?"*
+   I used the answer as a checklist against the brief: the four must-haves, the three bonuses, the dataset rules, the five deliverables and how the work is judged. It showed which items were done and which were still open (public repo, demo video, Drive folder).
+
 ## How I checked things
 
-- **Gender:** I compared all 65 entries with Wiktionary's Hindi data. 61 matched, including आत्मा (f.) and योग. The other 4 (वेद, पुराण, तपस्या, सूरज) had no noun entry on Wiktionary to compare against.
-- **Search:** one test checks that all 324 stored forms (headword, IAST and every romanised spelling) return their own entry first. Other tests check that no two headwords share a key, that close pairs stay apart (sukh/dukh, ped/ved, gun/guru, pita/mata), and that unseen spellings, typos, nukta forms and the English fallback work.
-- **Dataset:** a validator runs before every build and test. It checks required fields, unique ids, NFC normalisation, Devanagari-only headwords and duplicate spellings across entries.
-- **Saved, recent and Browse:** these have their own tests (`test/store.test.mjs`, `test/browse.test.mjs`): newest first, no duplicates, a limit of 8, saving and unsaving, broken storage not crashing the app, and the letter and part-of-speech filters. Word links like `#/word/dharm` and `#/word/धर्म` are tested too.
-- **Layout:** I checked for sideways overflow at 320, 375, 768 and 1440px.
+**Automated tests (24, run with `npm test` and again in CI before every deploy)**
+- **Round trip:** every one of the 331 stored forms (headword, IAST and each romanised spelling) must return its own entry first.
+- **No collisions:** no two headwords may share a search key, and dropping an extra "a" must never turn one stored word into another.
+- **Close pairs:** sukh/dukh, ped/ved, gun/guru and pita/mata must stay apart.
+- **Real typing:** spellings that aren't stored (shaanthi, vruksha, karam, shabad, करम), typos, both Unicode forms of nukta letters, and the English fallback.
+- **Guesses:** a typo may only appear under "Did you mean", never as the answer (shakti must not become शांति).
+- **App behaviour:** recent and saved lists (order, no duplicates, limit of 8, broken storage), the Browse filters, word links like `#/word/dharm` and `#/word/धर्म`, and the voice picker.
+
+**Backtesting against real inputs**
+- I ran 28 spellings that Indian users would type. 4 failed, and the fixes are now tests.
+- Later I ran 134 more. 13 failed, mostly an extra "a" (karam, shabad), and that became its own rule and test. The 4 that still miss are different words or shown as suggestions.
+
+**Dataset**
+- **Validator:** it runs before every build and test. It checks required fields, unique ids, NFC normalisation, Devanagari-only headwords and duplicate spellings.
+- **Gender:** I compared the first 65 entries with Wiktionary's Hindi data. 61 matched. The other 4 (वेद, पुराण, तपस्या, सूरज) had no noun entry to compare against, and they should still be checked in Platts.
+- **श्रेष्ठ (śreṣṭha):** the 66th entry, added because it is my name. I checked it against Wiktionary's Hindi and Sanskrit entries and the Sanskrit dictionary pages on Wisdom Library. It is an adjective ("best, most excellent") with no gender, borrowed into Hindi from Sanskrit. The example sentence is a common saying, "ज्ञान सबसे श्रेष्ठ धन है।"
 - **Example sentences:** read by native Hindi speakers, including me.
 - **Removed:** Claude wrote short "why not just *religion*?" notes for six words. I couldn't verify every claim in them, so I took them out.
+
+**The running app**
+- I checked the layout in a real browser at 320, 360, 375, 390, 412 and 768px, with a script that flags anything past the page margin. It found tiles overflowing at 320px, which I fixed.
+- I tapped through the main flows: opening the word of the day, clearing the search back to home, and the Browse letter strip.
 - **Attribution:** I couldn't confirm an existing Garuda dictionary product, so the app is described as a prototype.
-- **Still open:** the 4 unmatched genders should be checked in Platts.
