@@ -17,7 +17,9 @@ body {
   font: 18px/1.7 system-ui, "Noto Sans Devanagari", sans-serif;
 }
 header { position: sticky; top: 0; z-index: 1; background: var(--bg); padding: 16px; border-bottom: 1px solid var(--line); }
-header, main { max-width: 680px; margin-inline: auto; }
+header, main, footer { max-width: 680px; margin-inline: auto; }
+footer { padding: 0 16px 32px; font-size: 0.85rem; color: var(--muted); }
+footer a { color: var(--accent); }
 h1 { font-size: 1.1rem; margin: 0 0 8px; color: var(--accent); display: flex; align-items: center; gap: 8px; }
 h1 img { height: 38px; width: auto; }
 h1 small { color: var(--muted); font-weight: normal; }

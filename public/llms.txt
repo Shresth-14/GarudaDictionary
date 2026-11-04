@@ -1,0 +1,11 @@
+# Garuda Dictionary (prototype)
+
+> A Hindi and Sanskrit dictionary prototype for Garuda Prakashan. Entries have a Devanagari headword, IAST transliteration, common romanised spellings, part of speech, English meanings and a Hindi example sentence.
+
+## Data
+
+- [All entries](https://shresth-14.github.io/GarudaDictionary/api/words.json): JSON array of every entry
+- [One entry](https://shresth-14.github.io/GarudaDictionary/api/words/dharma.json): `api/words/<slug>.json`, where the slug is the entry's first romanised spelling (dharma, shiksha, gyan…)
+- [Open a word in the app](https://shresth-14.github.io/GarudaDictionary/#/word/dharma): `#/word/<any spelling>` (dharm, dharam and धर्म all work)
+
+Entry fields: `id`, `headword`, `transliteration`, `romanised`, `pos`, `meanings`, `example`.

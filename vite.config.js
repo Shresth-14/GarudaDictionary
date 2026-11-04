@@ -1,14 +1,31 @@
+import { readFileSync } from "node:fs";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
+
+// Public word list for other apps and AI tools: api/words.json (all entries) and api/words/<slug>.json (one entry).
+// ponytail: static files written at build time; a query endpoint (?q=dharm) would need a server.
+function wordApi() {
+  return {
+    name: "word-api",
+    generateBundle() {
+      const words = JSON.parse(readFileSync("data/words.json", "utf8"));
+      const emit = (fileName, data) => this.emitFile({ type: "asset", fileName, source: JSON.stringify(data, null, 2) });
+      emit("api/words.json", words);
+      for (const w of words) emit(`api/words/${w.romanised[0]}.json`, w);
+    },
+  };
+}
 
 export default defineConfig({
   // ponytail: relative base works on GitHub Pages under any repo name; switch to '/<repo>/' only if a path breaks.
   base: "./",
   plugins: [
+    wordApi(),
     VitePWA({
       registerType: "autoUpdate",
       // the 750 KB source logo stays out of the offline cache; the app uses the small PNGs made from it
-      workbox: { globPatterns: ["**/*.{js,css,html,png,woff2,json}"] },
+      // the app already bundles the words, so the public API files are left out too
+      workbox: { globPatterns: ["**/*.{js,css,html,png,woff2,json}"], globIgnores: ["api/**"] },
       manifest: {
         name: "Garuda Dictionary (prototype)",
         short_name: "Garuda Kosh",

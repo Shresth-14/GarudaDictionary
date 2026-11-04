@@ -95,6 +95,23 @@ There are 65 entries:
 
 Entries were drafted with AI and reviewed by hand. Genders were cross-checked against Wiktionary's Hindi data (61 of 65 matched; the rest are listed in the AI log), and example sentences were read by native Hindi speakers. Words were chosen so that no two headwords share a search key, and a test enforces this.
 
+## Using the dictionary in other apps and AI tools
+
+The brief asks how the dictionary can plug into other apps, AI tools and platforms. Every build publishes the dataset as plain JSON files alongside the app:
+
+| URL | Returns |
+|---|---|
+| [`/api/words.json`](https://shresth-14.github.io/GarudaDictionary/api/words.json) | All entries, as a JSON array in the brief's format |
+| [`/api/words/dharma.json`](https://shresth-14.github.io/GarudaDictionary/api/words/dharma.json) | One entry. The slug is its first romanised spelling (`shiksha`, `gyan`, `vriksh`…) |
+| [`/#/word/dharm`](https://shresth-14.github.io/GarudaDictionary/#/word/dharm) | Opens a word in the app. Any spelling or Devanagari works, so other sites can link straight to an entry |
+| [`/llms.txt`](https://shresth-14.github.io/GarudaDictionary/llms.txt) | A short plain-text guide to the above, for AI assistants and crawlers |
+
+```bash
+curl -s https://shresth-14.github.io/GarudaDictionary/api/words/dharma.json
+```
+
+The files are generated from `data/words.json` at build time (`vite.config.js`), so they can't drift from the app.
+
 ## Trade-offs
 
 - **Static JSON, not a database.** At 65 entries a linear scan takes under a millisecond and works offline. Past roughly 10,000 entries the search would need an n-gram or trie index.
@@ -110,7 +127,7 @@ Entries were drafted with AI and reviewed by hand. Genders were cross-checked ag
 - A larger, editor-reviewed dataset, with Garuda's editors checking every entry.
 - Short notes on words that lose meaning in translation (dharma ≠ "religion"), reviewed by Garuda's editors.
 - Audio pronunciation recorded by native speakers.
-- A public JSON API and an embeddable widget, so other sites, apps and AI assistants can look up Garuda's definitions.
+- A search API (`?q=dharm`) and an embeddable widget, so other sites, apps and AI assistants can look up any spelling, not just exact slugs. This needs a small server or edge function, because the current files are static.
 - Learning new spelling variants from what users actually search for.
 
 ## AI use
