@@ -8,6 +8,20 @@ A phone-first, offline-capable prototype front-end for Garuda Prakashan's dictio
 - **Demo video:** _add link_
 - **Dataset:** 65 curated entries in [`data/words.json`](data/words.json)
 
+## Features
+
+| Brief | What the app does |
+|---|---|
+| **Must:** Devanagari and Roman search return the same entry | धर्म, dharma, dharm, dharam and DHARMA all open धर्म, including spellings that aren't stored (shaanthi, vruksha, zameen) |
+| **Must:** entry detail screen with all fields | Headword, IAST, part of speech, numbered meanings, example sentence and every romanised spelling. Each word has its own link (`#/word/dharma`), and any spelling works in the link (`#/word/dharm`, `#/word/धर्म`) |
+| **Must:** works well on a phone | Phone-first layout with a sticky search bar, 44px+ tap targets, large Devanagari type, and light and dark themes. Installable to the home screen |
+| **Must:** clear no-results state | Shows the query, explains what to type, and offers example searches to tap |
+| **Bonus:** typo-tolerant search | Typos are offered under "Did you mean…", never shown as if they were the answer |
+| **Bonus:** works offline | A service worker caches the app and dataset after the first visit |
+| **Bonus:** recent searches or bookmarks | The last 8 words viewed, plus saved words (☆ Save), both on the home screen |
+
+The home screen also shows a **word of the day**.
+
 ## How to run
 
 ```bash
@@ -25,10 +39,11 @@ Every push to `main` runs the tests, builds and deploys to GitHub Pages (`.githu
 |---|---|
 | `data/words.json` | The dataset, in the brief's format: `id, headword, transliteration, romanised, pos, meanings, example` |
 | `src/normalise.js` | Turns any input (Devanagari, IAST or loose Roman) into one ASCII "skeleton" key |
-| `src/search.js` | Finds and ranks matches; returns confident **results** and **"Did you mean…"** suggestions separately |
-| `src/main.js`, `src/style.css` | The UI: a sticky search bar and result cards, light and dark themes |
+| `src/search.js` | Finds and ranks matches; returns confident **results** and **"Did you mean…"** suggestions separately; resolves word links |
+| `src/store.js` | Recently viewed and saved words, stored as entry ids in the browser's `localStorage` |
+| `src/main.js`, `src/style.css` | The UI: home, results and detail views, switched by the URL hash with no router library |
 | `scripts/validate.mjs` | Dataset checks, run before every test and build |
-| `test/search.test.mjs` | Search tests on the real dataset, including Indic edge cases |
+| `test/` | Search tests on the real dataset, including Indic edge cases; storage tests |
 
 The app is fully static: no backend, no database. The dataset is bundled with the app and cached by a service worker, so search works offline after the first visit.
 
@@ -87,12 +102,11 @@ Entries were drafted with AI and reviewed by hand. Genders were cross-checked ag
 - **A lossy key.** Folding spellings means some real pairs share a key (कम and काम both become "kam"). Ranking and the stored spellings resolve this. The curated set avoids such pairs, and adding them later would need a test like the near-pairs one.
 - **Simplified schwa rule.** It handles common words but not every compound.
 - **Web app, not an APK.** One link works on any phone with no install, and it can still be added to the home screen and used offline.
-- **No backend.** The planned bookmarks and recent searches would stay on one device.
+- **No backend.** Saved and recent words live in the browser, so they stay on one device and don't sync. Storage errors (for example in private browsing) are caught, and the app works without them.
+- **Hash links (`#/word/dharma`) rather than real paths.** They work on any static host with no server rewrite rules.
 
 ## With 2 more weeks
 
-- An entry detail screen with shareable links (`#/word/dharma`), plus a clearer no-results screen with example searches.
-- Recent searches and bookmarks.
 - A larger, editor-reviewed dataset, with Garuda's editors checking every entry.
 - Short notes on words that lose meaning in translation (dharma ≠ "religion"), reviewed by Garuda's editors.
 - Audio pronunciation recorded by native speakers.
