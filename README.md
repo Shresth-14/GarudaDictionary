@@ -77,14 +77,18 @@ Each entry already lists common spellings (`dharma`, `dharm`, `dharam`), but use
 1. exact Devanagari headword;
 2. exact stored spelling or IAST;
 3. same skeleton key;
-4. prefix, for live typing;
-5. typos, allowing 0, 1 or 2 letter changes depending on word length;
-6. English meaning, only when nothing else matches ("truth" finds सत्य).
+4. same key once an extra "a" between consonants is dropped (karam → कर्म, shabad → शब्द, करम → कर्म);
+5. prefix, for live typing;
+6. typos, allowing 0, 1 or 2 letter changes depending on word length;
+7. English meaning, only when nothing else matches ("truth" finds सत्य).
 
-Typo matches never pose as answers. They appear under **"Did you mean…"**, so "shakti" can't silently become शांति. Sanskrit "-am" endings (satyam, vriksham) are tried as a stem, and also only as a suggestion.
+Typo matches never pose as answers. They appear under **"Did you mean…"**, so "shakti" can't silently become शांति. Sanskrit "-am" endings (satyam, vriksham) are tried as a stem, and also only as a suggestion. When a word matches clearly, no guesses are shown beside it ("dhyan" gives ध्यान, not ध्यान plus ज्ञान).
+
+The extra-"a" rule (step 4) exists because Hindi doesn't pronounce the vowel people hear and type in karam or shabad. It only counts when the result equals a stored key exactly, and a test checks that dropping an "a" never turns one stored word into another.
 
 **Tested edge cases:**
 - **Unicode:** precomposed vs decomposed nukta (U+095B vs ज + ़).
+- **Extra vowels:** karam, shabad, sapana, paraan, and Devanagari typed the way it sounds (करम, शबद, परेम, सतय).
 - **Matching spellings:** half-न vs anusvara (शान्ति = शांति), and South Indian "th" (shanthi).
 - **Rule guards:** हरि must not collapse to हर, and अग्नि and प्रिय must survive.
 - **Near pairs stay apart:** sukh/dukh, ped/ved, gun/guru, pita/mata.
