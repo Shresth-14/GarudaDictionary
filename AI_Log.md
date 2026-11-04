@@ -20,33 +20,23 @@ To check the output I used the Node test runner, the Vite build, and the app in 
 
 **JSON files for other apps and AI tools.** The build writes `api/words.json` and one file per word from `data/words.json`, plus an `llms.txt`. A real search endpoint (`?q=dharm`) needs a server, so I left it in the "2 more weeks" list.
 
-**Gold text.** The brand gold was too faint on the ivory background, so text uses a darker gold (#8A6D3B). The brand gold is only used for lines and accents.
-
 **Links.** I used hash links (`#/word/dharma`) instead of real paths, because they work on any static host without server rules.
 
 **Fonts.** I self-host Noto Serif Devanagari and Inter (Latin and Devanagari only, about 380 KB) so the serif headwords show on phones and work offline.
 
 ## Prompts that shaped the work
 
-1. *"Here are draft entries. Flag anything likely to be wrong (gender, IAST, anusvara vs chandrabindu, invented meanings) and say which reference to check it against. Don't fix anything yourself."*
+1. *"Here are draft entries. Flag anything likely to be     wrong (gender, IAST, anusvara vs chandrabindu, invented  meanings) and say which reference to check it against. Don't fix anything yourself."*
    It flagged आत्मा's gender (Hindi f., Sanskrit m.), the "sum" meaning of योग, the ṃ convention in IAST, and its own example sentences.
+
 2. *"Give me real spellings Indian users would type that are likely to break my search."*
    I ran 28 spellings. Four failed: shakti, yogi, satyam and vriksham. I fixed them with the separate "Did you mean…" list and a stem guess for Sanskrit "-am" endings. All 28 now work and each has a test.
+
 3. *"Why does it take dharma as karma?"*
    I asked this after "dharm" suggested कर्म in the browser. धर्म was not in the live data yet, so कर्म (one letter away) correctly showed only as a suggestion. After the dataset was merged, "dharm" went straight to धर्म.
 
-### Later prompts (prompts lightly cleaned up from what I typed)
-
 4. *"Read the guidelines completely. Check what is done, what is left, and what I can improve for selection."*
    This turned up the biggest problem: the GitHub repo was still private, and the brief says private repos can't be reviewed. It also showed the demo video and Drive folder were still missing.
-5. *"Why is the deployed version still showing the old design?"* (with a screenshot of the live site)
-   The server already had the new build. My browser was showing the old one from the service worker cache, and the fix is to clear site data and reload.
-6. *"When I clear the search bar it should go back to the home page. Also fix the real-world typing gaps."*
-   Clearing the search now returns to home with the cursor still in the box. For typing, I tested 134 spellings and 13 failed. Most were an extra "a" people type (karam, shabad, sapana, करम). I added a rule for that and a test that it never turns one stored word into another. I also stopped showing "Did you mean" guesses next to a clear match.
-7. *"The mobile version is broken. Keep everything working, but fix the layout on mobile and smaller screens, because most of our users are on phones. Also fix the UI and UX of the word of the day section."*
-   I checked the app at 320, 360, 375, 390 and 768px. The word of the day became one tappable card, the Browse letters became a sideways-scrolling strip, and Save and Share got bigger buttons. At 320px some items ran past the page margin even though nothing scrolled sideways, so I added a stricter check for that. Typing "sha" showed "No match", so short prefixes now list words, with words spelled that way first.
-8. *"What were the key things in the guidelines that should be built, including the key implementation points and everything else?"*
-   I used the answer as a checklist against the brief: the four must-haves, the three bonuses, the dataset rules, the five deliverables and how the work is judged. It showed which items were done and which were still open (public repo, demo video, Drive folder).
 
 ## How I checked things
 
@@ -72,4 +62,4 @@ To check the output I used the Node test runner, the Vite build, and the app in 
 **The running app**
 - I checked the layout in a real browser at 320, 360, 375, 390, 412 and 768px, with a script that flags anything past the page margin. It found tiles overflowing at 320px, which I fixed.
 - I tapped through the main flows: opening the word of the day, clearing the search back to home, and the Browse letter strip.
-- **Attribution:** I couldn't confirm an existing Garuda dictionary product, so the app is described as a prototype.
+
