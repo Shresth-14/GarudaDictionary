@@ -45,7 +45,8 @@ export function renderWord(app, key) {
   const column = el("aside", { class: "results", "aria-label": "Search results" });
   const box = searchBox({
     listbox: list,
-    onInput: (q) => fillColumn(q, true),
+    // emptying the search field takes you back to the home page; replace, so Back doesn't bounce into it again
+    onInput: (q) => (q ? fillColumn(q, true) : location.replace("#/")),
     onSubmit(q) {
       const top = q && search(idx, q).results[0];
       if (top) location.hash = wordHref(top);

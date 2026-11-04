@@ -32,6 +32,8 @@ const ROUTES = [
 
 let cleanup = null;
 function route(first = false) {
+  // clearing the search on a word page lands on home: keep the cursor in the search box
+  const searching = document.activeElement?.classList.contains("search-input");
   cleanup?.abort();
   cleanup = new AbortController();
   const hit = ROUTES.map(([re, section, view]) => [location.hash.match(re), section, view]).find(([m]) => m);
@@ -44,7 +46,8 @@ function route(first = false) {
   nav.classList.remove("open");
   if (!first) {
     scrollTo(0, 0);
-    (app.querySelector("h1[tabindex]") ?? app).focus({ preventScroll: true });
+    const box = searching && app.querySelector(".search-input");
+    (box || (app.querySelector("h1[tabindex]") ?? app)).focus({ preventScroll: true });
   }
 }
 
