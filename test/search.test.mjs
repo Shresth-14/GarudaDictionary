@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { skeleton } from "../src/normalise.js";
-import { buildIndex, search, findEntry, slug } from "../src/search.js";
+import { buildIndex, search, findEntry, slug, schwaVariants } from "../src/search.js";
 
 const words = JSON.parse(readFileSync(new URL("../data/words.json", import.meta.url), "utf8"));
 const idx = buildIndex(words);
@@ -25,6 +25,29 @@ test("spellings not in the romanised list", () => {
     prakaash: "प्रकाश", bhaashaa: "भाषा", satyaa: "सत्य", premm: "प्रेम",
   };
   for (const [q, want] of Object.entries(cases)) assert.equal(top(q), want, q);
+});
+
+test("an extra schwa is a confident match, in Roman or Devanagari", () => {
+  const cases = {
+    karam: "कर्म", shabad: "शब्द", sapana: "सपना", paran: "प्राण", paraan: "प्राण",
+    "करम": "कर्म", "शबद": "शब्द", "परेम": "प्रेम", "सतय": "सत्य",
+  };
+  for (const [q, want] of Object.entries(cases)) assert.equal(top(q), want, q);
+  assert.deepEqual([...schwaVariants("karam")].sort(), ["kram", "karm", "krm"].sort());
+  assert.equal(schwaVariants("dost").size, 0); // no "a" between two consonants, nothing to drop
+});
+
+test("an extra schwa never turns one stored word into another", () => {
+  const keys = new Map(words.map((w) => [skeleton(w.headword), w.headword]));
+  for (const [k, head] of keys) for (const v of schwaVariants(k))
+    assert.ok(!keys.has(v), `${head} (${k}) collides with ${keys.get(v)} once an "a" is dropped`);
+});
+
+test("a clear match comes without guesses beside it", () => {
+  assert.equal(top("dhyan"), "ध्यान");
+  assert.deepEqual(search(idx, "dhyan").suggestions, []);  // not ज्ञान
+  assert.deepEqual(search(idx, "Dharmmm").suggestions, []); // not कर्म
+  assert.equal(guess("prakesh"), "प्रकाश");                 // no clear match, so guesses still show
 });
 
 test("typos and Sanskrit -am endings are offered as suggestions, not results", () => {
