@@ -259,7 +259,9 @@ a, button, input { touch-action: manipulation; -webkit-tap-highlight-color: rgba
 
 /* ---------- embed (iframe) ---------- */
 html[data-embed] .masthead, html[data-embed] .site-footer, html[data-embed] .skip, html[data-embed] .entry-actions { display: none; }
-html[data-embed] main { padding-block: 12px; }
+html[data-embed] main { padding-block: 28px 12px; } /* room above the headword so tall Devanagari marks are not clipped */
+html[data-embed] .entry-section { padding: 18px 0; }
+html[data-embed] .entry-head { padding-bottom: 18px; }
 .embed-credit { margin: 8px 0 12px; font-size: 0.9rem; }
 
 /* ---------- tablet ---------- */
