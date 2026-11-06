@@ -5,7 +5,7 @@
 A phone-first, offline-capable prototype front-end for Garuda Prakashan's dictionary. Type a Hindi or Sanskrit word in Devanagari (धर्म), IAST (dharma) or the way most people actually type it in Roman letters (dharm, dharam), and land on the same entry.
 
 - **Live app:** https://shresth-14.github.io/GarudaDictionary/
-- **Demo video:** _add link_
+- **Demo video:** [Watch the screen recording](https://www.loom.com/share/46a2785ef43b4615bfcac63797e827ff)
 - **Dataset:** 66 curated entries in [`data/words.json`](data/words.json)
 
 ## Features
