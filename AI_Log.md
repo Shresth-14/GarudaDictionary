@@ -54,7 +54,7 @@ To check the output I used the Node test runner, the Vite build, and the app in 
 
 **Dataset**
 - **Validator:** it runs before every build and test. It checks required fields, unique ids, NFC normalisation, Devanagari-only headwords and duplicate spellings.
-- **Gender:** I compared the first 65 entries with Wiktionary's Hindi data. 61 matched. The other 4 (वेद, पुराण, तपस्या, सूरज) had no noun entry to compare against, and they should still be checked in Platts.
+- **Gender:** I compared the first 65 entries with Wiktionary's Hindi data. 61 matched. The other 4 (वेद, पुराण, तपस्या, सूरज) had no noun entry there, so I checked them in Platts' dictionary (University of Chicago, DSAL). All 4 match: वेद s.m., पुराण adj. & s.m. (the noun sense is masculine), तपस्या s.f., सूरज s.m. So every gender in the first 65 entries is now checked against a published source.
 - **श्रेष्ठ (śreṣṭha):** the 66th entry, added because it is my name. I checked it against Wiktionary's Hindi and Sanskrit entries and the Sanskrit dictionary pages on Wisdom Library. It is an adjective ("best, most excellent") with no gender, borrowed into Hindi from Sanskrit. The example sentence is a common saying, "ज्ञान सबसे श्रेष्ठ धन है।"
 - **Example sentences:** read by native Hindi speakers, including me.
 - **Removed:** Claude wrote short "why not just *religion*?" notes for six words. I couldn't verify every claim in them, so I took them out.

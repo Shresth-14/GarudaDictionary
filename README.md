@@ -105,7 +105,7 @@ There are 66 entries:
 - 22 everyday words (pānī, ghar, kitāb, nadī, phūl, sapnā…);
 - 1 entry added by the author: श्रेष्ठ (śreṣṭha, "best"), which is also his name.
 
-Entries were drafted with AI and reviewed by hand. Genders were cross-checked against Wiktionary's Hindi data (61 of the first 65 matched; the rest are listed in the AI log; श्रेष्ठ is an adjective, so it has no gender to compare), and example sentences were read by native Hindi speakers. Words were chosen so that no two headwords share a search key, and a test enforces this.
+Entries were drafted with AI and reviewed by hand. Genders were cross-checked against Wiktionary's Hindi data (61 of the first 65 matched; the other 4 (वेद, पुराण, तपस्या, सूरज) were confirmed in Platts' dictionary; श्रेष्ठ is an adjective, so it has no gender to compare), and example sentences were read by native Hindi speakers. Words were chosen so that no two headwords share a search key, and a test enforces this.
 
 ## Using the dictionary in other apps and AI tools
 
